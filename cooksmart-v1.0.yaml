@@ -1,0 +1,212 @@
+openapi: "3.0.3"
+info:
+  title: Cooksmart
+  description: "EnPro pre-project - recipe DB"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0
+
+paths:
+  /recipes:
+    get:
+      summary: get a list of the user's recipes
+      responses:
+        200:
+          description: a list of the user's recipes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipePreviewList"
+        204:
+          description: user has no recipes
+    post:
+      summary: create a new recipe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Recipe"
+      responses:
+        200:
+          description: creation succeeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+  /recipe/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: ID of the recipe to fetch
+    get:
+      summary: get the recipe data
+      responses:
+        200:
+          description: the recipe data, including ingredients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+        404:
+          description: no recipe with this ID
+    put:
+      summary: update an existing recipe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Recipe"
+      responses:
+        200:
+          description: succeeded
+    delete:
+      summary: delete a recipe
+      responses:
+        200:
+          description: deletion succeeded
+  /ingredients:
+    get:
+      summary: get a list of the user's ingredients
+      responses:
+        200:
+          description: a list of the user's ingredients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngredientPrototypeList"
+        204:
+          description: user has no ingredients
+    post:
+      summary: create a new ingredient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IngredientPrototype"
+      responses:
+        200:
+          description: creation succeeded
+        400:
+          description: you supplied an invalid recipe (did you forget the looooove?)
+  /ingredient/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+          format: int64
+        description: ID of the ingredient to fetch
+    get:
+      summary: get the ingredient data
+      responses:
+        200:
+          description: the ingredient data, including ingredients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IngredientPrototype"
+        404:
+          description: no ingredient with this ID
+    put:
+      summary: update an existing ingredient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IngredientPrototype"
+      responses:
+        200:
+          description: succeeded
+    delete:
+      summary: delete an ingredient
+      responses:
+        200:
+          description: deletion succeeded
+  /compile_shopping_list:
+    get:
+      summary: compile a shopping list for
+      parameters:
+        - in: query
+          name: recipes
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+          description: list of recipe IDs
+      responses:
+        200:
+          description: shopping list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShoppingList"
+
+components:
+  schemas:
+    # ingredients are per-recipe, ingredient protos are global
+    IngredientPrototype:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+    IngredientPrototypeList:
+      type: array
+      items:
+        $ref: "#/components/schemas/IngredientPrototype"
+
+    # short recipe previews for lists of recipes
+    RecipePreview:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        rating:
+          type: integer
+    RecipePreviewList:
+      type: array
+      items:
+        $ref: "#/components/schemas/RecipePreview"
+
+    # full recipe(s) and their content
+    Recipe:
+      allOf:
+        - $ref: "#/components/schemas/RecipePreview"
+        - type: object
+          properties:
+            ingredients:
+              type: array
+              items:
+                $ref: "#/components/schemas/Ingredient"
+    Ingredient:
+      allOf:
+        - $ref: "#/components/schemas/IngredientPrototype"
+        - type: object
+          properties:
+            quantity:
+              type: number
+            unit:
+              type: string
+
+    ShoppingList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Ingredient"

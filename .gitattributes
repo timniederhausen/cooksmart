@@ -1,0 +1,24 @@
+* text=auto
+
+# JS
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+
+# Python
+*.py text
+
+# JVM / Android
+*.gradle text
+*.java text
+*.kt text
+
+*.md text
+*.xml text
+*.ini text
+*.txt text
+*.drawio text
+
+*.sh text eol=lf
+
+*.pbxproj -text
