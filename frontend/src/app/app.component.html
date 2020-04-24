@@ -1,13 +1,41 @@
-<!-- Toolbar -->
-<nav class="navbar navbar-light bg-light">
-  <span class="navbar-brand mb-0 h1">Navbar</span>
-  <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
-</nav>
-<div class="content" role="main">
+<!-- navbar -->
+<div class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+    <img src="assets/brand.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+    Cooksmart
+  </a>
+  <button class="navbar-toggler" type="button"  (click)="toggleNavbar($event)" aria-controls="navbarExpanded" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item-active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Shopping List</a>
+      </li>
+    </ul>
+  </div>
+</div>
 
+<!-- navbar collapse overlay-->
+<div [ngbCollapse]="isNavbarCollapsed" id="navbarExpanded"
+     [@collapse]="isNavbarCollapsedAnim"
+     class="shadow navbar navbar-light collapse floating-navbox">
+  <div class="">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" (click)="closeNavbar()" routerLink="">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="closeNavbar()" routerLink="shopping-list">Shopping List</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="content" role="main">
 Placeholder
 </div>
 
