@@ -23,7 +23,7 @@ data class Ingredient(
         @JsonProperty
         val id: Long = 0,
 
-        @ManyToOne(cascade = [CascadeType.REMOVE])
+        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         val prototype: IngredientPrototype,
 
         @JsonProperty
@@ -33,6 +33,6 @@ data class Ingredient(
         @JsonProperty
         val unit: String = "",
 
-        @ManyToOne(cascade = [CascadeType.REMOVE])
-        val recipe: Recipe
+        @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        val recipe: Recipe? = null
 )

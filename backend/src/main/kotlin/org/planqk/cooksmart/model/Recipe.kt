@@ -14,10 +14,7 @@
 package org.planqk.cooksmart.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -39,5 +36,8 @@ data class Recipe(
 
         @JsonProperty
         @get: NotNull
-        val rating: Int = -1
+        val rating: Int = -1,
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "recipe")
+        val ingredients: List<Ingredient> = emptyList()
 )
