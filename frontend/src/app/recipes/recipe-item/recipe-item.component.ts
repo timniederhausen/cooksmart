@@ -6,8 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./recipe-item.component.scss']
 })
 export class RecipeItemComponent implements OnInit {
+  name: String = "";
+  rating: Number  = 0;
 
-  constructor() { }
+  constructor(name: String, rating: Number) {
+    this.name = name;
+    this.rating = rating;
+  }
 
   ngOnInit() {
   }

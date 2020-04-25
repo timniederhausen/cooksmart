@@ -10,6 +10,7 @@ export class ItemDirective {
   styleUrls: ['./smart-list.component.scss'],
   template: `
     <div>
+      Placeholder
       <ng-container *ngFor="let item of items">
         <ng-container *ngTemplateOutlet="listItemTemplate"></ng-container>
       </ng-container>
