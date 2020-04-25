@@ -21,7 +21,7 @@ interface ShoppingListApi {
                 content = [Content(array = ArraySchema(schema = Schema(implementation = Ingredient::class)))]),
         ApiResponse(responseCode = "400", description = "Invalid recipe ID supplied")
     ])
-    @GetMapping(value = ["/for_recipes"], produces = ["application/json"])
+    @GetMapping(value = ["/compile_for_recipes"], produces = ["application/json"])
     fun compileForRecipes(@Parameter(description = "Recipes to shop for", required = true)
                           @RequestParam(value = "recipes", required = false)
                           recipes: List<Long>): ResponseEntity<List<Ingredient>>
