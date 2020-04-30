@@ -65,7 +65,9 @@ interface RecipeApi {
         ApiResponse(responseCode = "204", description = "There are no recipes")
     ])
     @GetMapping(value = ["/recipes"], produces = ["application/json"])
-    fun listRecipes(): ResponseEntity<List<Recipe>>
+    fun listRecipes(@Parameter(description = "Filter for the recipe name", required = false)
+                    @RequestParam("query")
+                    query: String?): ResponseEntity<List<Recipe>>
 
     @Operation(summary = "Add a new ingredient prototype")
     @ApiResponses(value = [

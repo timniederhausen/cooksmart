@@ -1,20 +1,13 @@
 package org.planqk.cooksmart.api
 
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.media.ArraySchema
-import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.planqk.cooksmart.model.Recipe
 import org.planqk.cooksmart.repository.RecipeRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Validated
@@ -37,8 +30,11 @@ class RecipeController(private val recipes: RecipeRepository) : RecipeApi {
         return ResponseEntity(HttpStatus.CREATED)
     }
 
-    override fun listRecipes(): ResponseEntity<List<Recipe>> {
-        return ResponseEntity(recipes.findAll(), HttpStatus.OK)
+    override fun listRecipes(query: String?): ResponseEntity<List<Recipe>> {
+        if (query == null || query.isEmpty())
+            return ResponseEntity(recipes.findAll(), HttpStatus.OK)
+
+        return ResponseEntity(recipes.findDistinctRecipesByNameContainingOrDescriptionContaining(query, query), HttpStatus.OK)
     }
 
     override fun addRecipe(recipe: Recipe): ResponseEntity<Recipe> {

@@ -232,13 +232,20 @@ export class RecipeService {
 
     /**
      * Get a list of all recipes
+     * @param query Filter for the recipe name
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listRecipes(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Recipe>>;
-    public listRecipes(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Recipe>>>;
-    public listRecipes(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Recipe>>>;
-    public listRecipes(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listRecipes(query?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Array<Recipe>>;
+    public listRecipes(query?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Array<Recipe>>>;
+    public listRecipes(query?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Array<Recipe>>>;
+    public listRecipes(query?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (query !== undefined && query !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>query, 'query');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -262,6 +269,7 @@ export class RecipeService {
 
         return this.httpClient.get<Array<Recipe>>(`${this.configuration.basePath}/api/recipe/v1/recipes`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
