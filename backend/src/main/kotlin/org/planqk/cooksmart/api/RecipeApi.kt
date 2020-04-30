@@ -15,13 +15,15 @@ package org.planqk.cooksmart.api
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.planqk.cooksmart.model.Recipe
+import org.springdoc.data.rest.converters.PageableAsQueryParam
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -60,14 +62,17 @@ interface RecipeApi {
 
     @Operation(summary = "Get a list of all recipes")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "List of all recipes",
-                content = [Content(array = ArraySchema(schema = Schema(implementation = Recipe::class)))]),
-        ApiResponse(responseCode = "204", description = "There are no recipes")
+        ApiResponse(responseCode = "200", description = "List of all recipes"),
+        ApiResponse(responseCode = "204", description = "There are no recipes",
+                content = [Content(schema = Schema(hidden = true))])
     ])
     @GetMapping(value = ["/recipes"], produces = ["application/json"])
+    @PageableAsQueryParam
     fun listRecipes(@Parameter(description = "Filter for the recipe name", required = false)
                     @RequestParam("query")
-                    query: String?): ResponseEntity<List<Recipe>>
+                    query: String?,
+                    @Parameter(hidden = true)
+                    pageable: Pageable): ResponseEntity<Page<Recipe>>
 
     @Operation(summary = "Add a new ingredient prototype")
     @ApiResponses(value = [

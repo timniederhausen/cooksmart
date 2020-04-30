@@ -2,6 +2,8 @@ package org.planqk.cooksmart.api
 
 import org.planqk.cooksmart.model.Recipe
 import org.planqk.cooksmart.repository.RecipeRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,11 +32,13 @@ class RecipeController(private val recipes: RecipeRepository) : RecipeApi {
         return ResponseEntity(HttpStatus.CREATED)
     }
 
-    override fun listRecipes(query: String?): ResponseEntity<List<Recipe>> {
+    override fun listRecipes(query: String?,
+                             pageable: Pageable): ResponseEntity<Page<Recipe>> {
         if (query == null || query.isEmpty())
-            return ResponseEntity(recipes.findAll(), HttpStatus.OK)
+            return ResponseEntity(recipes.findAll(pageable), HttpStatus.OK)
 
-        return ResponseEntity(recipes.findDistinctRecipesByNameContainingOrDescriptionContaining(query, query), HttpStatus.OK)
+        return ResponseEntity(recipes.findDistinctRecipesByNameContainingOrDescriptionContaining(
+                query, query, pageable), HttpStatus.OK)
     }
 
     override fun addRecipe(recipe: Recipe): ResponseEntity<Recipe> {
