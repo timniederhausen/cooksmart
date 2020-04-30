@@ -8,7 +8,7 @@ import { Recipe } from '../../data';
 })
 export class RecipeItemComponent implements OnInit {
   @Input()
-  recipe: Recipe = { description: '', id: 0, image: '', ingredients: undefined, rating: 0, name:"placeholder"};
+  recipe: Recipe = { description: 'placeholder', id: 0, image: '', ingredients: undefined, rating: 2, name:"placeholder"};
 
   ngOnInit() {
   }

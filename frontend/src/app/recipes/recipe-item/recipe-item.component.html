@@ -1,15 +1,20 @@
-<ngb-panel id="recipe-item-1">
-  <ng-template ngbPanelHeader>
-    <h5>Placeholder biatch</h5>
-    <button>Toggle first</button>
-  </ng-template>
-  <ng-template ngbPanelContent>
-    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia
-    aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-    sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh
-    helvetica,
-    craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
-    occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-    labore sustainable VHS.
-  </ng-template>
-</ngb-panel>
+<ng-container>
+
+  <div class="row">
+    <div class="col">
+      <h1>{{recipe.name}}</h1>
+      <ngb-rating class="align-self-center p-2" [(rate)]="recipe.rating"></ngb-rating>
+      <div>
+        {{recipe.description}}
+      </div>
+    </div>
+    <div class="col  col-8">
+      <img  style="width: 100%" src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2018/12/Shakshuka-19.jpg">
+    </div>
+  </div>
+  <ng-container>
+    <ul>
+      <li *ngFor="let ingredient of [0,1,2,3,4]"> ingredient placeholder</li>
+    </ul>
+  </ng-container>
+</ng-container>

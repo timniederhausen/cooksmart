@@ -37,11 +37,10 @@ export class SmartListComponent<T> implements OnInit {
 
   ngOnInit() {
     this.items.subscribe((items) => {
-      console.log('YAAAA ' + items.length);
       this.currentItems = items.map((item, index) => {
         const newItem = item as Panel<T>;
         newItem.id = index;
-        newItem.isOpen = true;
+        newItem.isOpen = false;
         return newItem;
       });
     });

@@ -17,7 +17,6 @@ import { RecipeItemComponent } from './recipes/recipe-item/recipe-item.component
 import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.component';
 import { ApiModule } from './data';
 import {HttpClientModule} from "@angular/common/http";
-import { AccordionComponent } from './smart-list/accordion/accordion.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +25,6 @@ import { AccordionComponent } from './smart-list/accordion/accordion.component';
     HeaderDirective, ContentDirective,
     RecipeItemComponent,
     RecipeScreenComponent,
-    AccordionComponent,
   ],
   imports: [
     BrowserModule,
