@@ -1,30 +1,27 @@
-import { Component, ContentChild, Directive, OnInit, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  Directive, Input,
+  OnInit,
+  TemplateRef,
+} from '@angular/core';
 
-@Directive({selector: 'item-directive'})
-export class ItemDirective {
-
-}
+@Directive({ selector: '[item]' })
+export class ItemDirective {}
 
 @Component({
   selector: 'app-smart-list',
+  templateUrl: './smart-list.component.html',
   styleUrls: ['./smart-list.component.scss'],
-  template: `
-    <div>
-      Placeholder
-      <ng-container *ngFor="let item of items">
-        <ng-container *ngTemplateOutlet="listItemTemplate"></ng-container>
-      </ng-container>
-    </div>
-`
 })
+export class SmartListComponent<T> implements OnInit {
+  @Input()
+  items: T[] = [];
 
-export class SmartListComponent implements OnInit {
-  items = [];
-  @ContentChild(ItemDirective, {read: TemplateRef, static:false}) listItemTemplate;
+  @ContentChild(ItemDirective, { read: TemplateRef, static: true })
+  itemTemplate;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

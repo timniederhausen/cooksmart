@@ -1,7 +1,16 @@
 <div class="container p-2">
-    <form class="form-inline justify-content-center parent">
-        <input class="form-control search-element wide" type="search" placeholder="Search" aria-label="Search">
-        <button class="search-element btn btn-outline-dark" type="submit"><i class="material-icons">search</i></button>
-    </form>
-  <app-smart-list></app-smart-list>
-></div>
+  <form class="form-inline justify-content-center parent">
+    <input
+      class="form-control search-element wide"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+    />
+    <button class="search-element btn btn-outline-dark" type="submit">
+      <i class="material-icons">search</i>
+    </button>
+  </form>
+  <app-smart-list [items]="[1, 2, 3, 4]">
+    <div *item="let item">bla bnla {{ item }}</div>
+  </app-smart-list>
+</div>
