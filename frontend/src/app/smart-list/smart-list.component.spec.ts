@@ -3,8 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SmartListComponent } from './smart-list.component';
 
 describe('SmartListComponent', () => {
-  let component: SmartListComponent;
-  let fixture: ComponentFixture<SmartListComponent>;
+  let component: SmartListComponent<any>;
+  let fixture: ComponentFixture<SmartListComponent<any>>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

@@ -27,4 +27,5 @@ export class SmartListComponent<T> implements OnInit {
   ngOnInit() {}
 
   isAsync() { return this.items instanceof Observable; }
+
 }

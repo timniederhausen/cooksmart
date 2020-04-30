@@ -9,7 +9,11 @@
       (input)="search(searchInput.value)"
     />
   </form>
-  <app-smart-list [items]="recipes$">
-    <div *item="let item">bla bnla {{ item }}</div>
-  </app-smart-list>
+  <div class="container p-0">
+      <app-smart-list [items]="[1, 2, 3, 4]">
+        <div *item="let item">
+          <app-recipe-item></app-recipe-item>
+        </div>
+      </app-smart-list>
+  </div>
 </div>
