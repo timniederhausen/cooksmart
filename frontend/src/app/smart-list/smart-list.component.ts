@@ -1,14 +1,20 @@
 import {
   Component,
   ContentChild,
-  Directive, Input,
+  Directive,
+  Input,
   OnInit,
   TemplateRef,
 } from '@angular/core';
-import {Observable} from "rxjs";
+import { Observable, of } from 'rxjs';
 
-@Directive({ selector: '[item]' })
-export class ItemDirective {}
+@Directive({ selector: '[header]' })
+export class HeaderDirective {}
+
+@Directive({ selector: '[content]' })
+export class ContentDirective {}
+
+type Panel<T> = T & { id: number; isOpen: boolean };
 
 @Component({
   selector: 'app-smart-list',
@@ -17,15 +23,31 @@ export class ItemDirective {}
 })
 export class SmartListComponent<T> implements OnInit {
   @Input()
-  items: T[] | Observable<T[]> = [];
+  items: Observable<T[]> = of([]);
 
-  @ContentChild(ItemDirective, { read: TemplateRef, static: true })
-  itemTemplate;
+  private currentItems: Panel<T>[] = [];
+
+  @ContentChild(HeaderDirective, { read: TemplateRef, static: true })
+  headerTemplate: TemplateRef<any>;
+
+  @ContentChild(ContentDirective, { read: TemplateRef, static: true })
+  contentTemplate: TemplateRef<any>;
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.items.subscribe((items) => {
+      console.log('YAAAA ' + items.length);
+      this.currentItems = items.map((item, index) => {
+        const newItem = item as Panel<T>;
+        newItem.id = index;
+        newItem.isOpen = true;
+        return newItem;
+      });
+    });
+  }
 
-  isAsync() { return this.items instanceof Observable; }
-
+  toggle(index: number) {
+    this.currentItems[index].isOpen = !this.currentItems[index].isOpen;
+  }
 }

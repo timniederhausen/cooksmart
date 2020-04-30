@@ -3,19 +3,30 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgbAccordionModule, NgbCollapseModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbAccordionModule,
+  NgbCollapseModule,
+  NgbRatingModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ItemDirective, SmartListComponent } from './smart-list/smart-list.component';
+import {
+  HeaderDirective, ContentDirective,
+  SmartListComponent,
+} from './smart-list/smart-list.component';
 import { RecipeItemComponent } from './recipes/recipe-item/recipe-item.component';
 import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.component';
+import { ApiModule } from './data';
+import {HttpClientModule} from "@angular/common/http";
+import { AccordionComponent } from './smart-list/accordion/accordion.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SmartListComponent,
-    ItemDirective,
+    HeaderDirective, ContentDirective,
     RecipeItemComponent,
-    RecipeScreenComponent
+    RecipeScreenComponent,
+    AccordionComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,9 +34,11 @@ import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.com
     NgbCollapseModule,
     BrowserAnimationsModule,
     NgbAccordionModule,
-    NgbRatingModule
+    NgbRatingModule,
+    HttpClientModule,
+    ApiModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

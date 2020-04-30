@@ -1,8 +1,24 @@
-<div>
-  placeholder
-  <ngb-accordion  #a="ngbAccordion" activeIds="static-0" [closeOthers]="true">
-    <ng-container *ngFor="let item of (isAsync() ? items : items | async)">
-        <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
-    </ng-container>
-  </ngb-accordion>
-</div>
+<ng-template ngFor let-item let-i="index" [ngForOf]="currentItems">
+  <div class="card">
+    <div role="tab" id="panel-{{ i }}-header" class="card-header">
+      <ng-template
+        [ngTemplateOutlet]="headerTemplate"
+        [ngTemplateOutletContext]="{ $implicit: item }"
+      ></ng-template>
+    </div>
+    <div
+      id="panel-{{ i }}"
+      role="tabpanel"
+      aria-labelledby="panel-{{ i }}-header"
+      class="collapse"
+      [class.show]="item.isOpen"
+    >
+      <div class="card-body">
+        <ng-template
+          [ngTemplateOutlet]="contentTemplate"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        ></ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>

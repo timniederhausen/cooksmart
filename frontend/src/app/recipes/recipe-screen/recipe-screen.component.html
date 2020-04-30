@@ -10,10 +10,19 @@
     />
   </form>
   <div class="container p-0">
-      <app-smart-list [items]="[1, 2, 3, 4]">
-        <div *item="let item">
-          <app-recipe-item></app-recipe-item>
-        </div>
-      </app-smart-list>
+    <app-smart-list #recipeList [items]="recipes$">
+      <ng-container *header="let item">
+        <button
+          class="btn btn-link"
+          [class.collapsed]="!item.isOpen"
+          (click)="recipeList.toggle(item.id)"
+        >
+          {{ item.name }}
+        </button>
+      </ng-container>
+      <ng-container *content="let item">
+        CONTENT
+      </ng-container>
+    </app-smart-list>
   </div>
 </div>
