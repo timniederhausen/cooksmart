@@ -62,11 +62,15 @@ dependencies {
 }
 
 openApiGenerate {
-    generatorName.set("kotlin-spring")
-    inputSpec.set("$rootDir/../cooksmart-v1.0.yaml")
-    outputDir.set("$buildDir/generated")
-    apiPackage.set("org.planqk.cooksmart.api")
-    modelPackage.set("org.planqk.cooksmart.api.model")
+    generatorName.set("typescript-angular")
+    inputSpec.set("$rootDir/../cooksmart.json")
+    outputDir.set("$rootDir/../frontend/src/app/data")
+    modelPackage.set("model")
+    additionalProperties.set(mapOf("fileNaming" to "kebab-case"))
+}
+
+tasks.named<JavaCompile>("compileJava") {
+    dependsOn("openApiGenerate")
 }
 
 tasks.withType<Test> {
