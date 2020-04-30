@@ -1,6 +1,5 @@
 <div>
-  Placeholder
-  <ng-container *ngFor="let item of items">
+  <ng-container *ngFor="let item of (isAsync() ? items : items | async)">
     <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
   </ng-container>
 </div>

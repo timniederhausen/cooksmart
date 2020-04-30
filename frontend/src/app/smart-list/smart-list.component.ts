@@ -5,6 +5,7 @@ import {
   OnInit,
   TemplateRef,
 } from '@angular/core';
+import {Observable} from "rxjs";
 
 @Directive({ selector: '[item]' })
 export class ItemDirective {}
@@ -16,7 +17,7 @@ export class ItemDirective {}
 })
 export class SmartListComponent<T> implements OnInit {
   @Input()
-  items: T[] = [];
+  items: T[] | Observable<T[]> = [];
 
   @ContentChild(ItemDirective, { read: TemplateRef, static: true })
   itemTemplate;
@@ -24,4 +25,6 @@ export class SmartListComponent<T> implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  isAsync() { return this.items instanceof Observable; }
 }
