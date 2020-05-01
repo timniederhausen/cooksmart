@@ -16,7 +16,6 @@ package org.planqk.cooksmart.api
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -41,9 +40,9 @@ interface RecipeApi {
 
     @Operation(summary = "Retrieve a recipe")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "The recipe data",
-                content = [Content(schema = Schema(implementation = Recipe::class))]),
-        ApiResponse(responseCode = "400", description = "Invalid recipe ID")
+        ApiResponse(responseCode = "200", description = "The recipe data"),
+        ApiResponse(responseCode = "400", description = "Invalid recipe ID",
+                content = [Content()])
     ])
     @GetMapping(value = ["/recipe/{id}"], produces = ["application/json"])
     fun getRecipe(@Parameter(description = "ID of the recipe to retrieve", required = true)
@@ -64,7 +63,7 @@ interface RecipeApi {
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "List of all recipes"),
         ApiResponse(responseCode = "204", description = "There are no recipes",
-                content = [Content(schema = Schema(hidden = true))])
+                content = [Content()])
     ])
     @GetMapping(value = ["/recipes"], produces = ["application/json"])
     @PageableAsQueryParam

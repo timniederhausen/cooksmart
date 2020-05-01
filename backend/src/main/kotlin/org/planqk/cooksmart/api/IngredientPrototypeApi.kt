@@ -15,9 +15,7 @@ package org.planqk.cooksmart.api
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -39,9 +37,9 @@ interface IngredientPrototypeApi {
 
     @Operation(summary = "Retrieve an ingredient prototype")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "The ingredient data",
-                content = [Content(schema = Schema(implementation = IngredientPrototype::class))]),
-        ApiResponse(responseCode = "400", description = "Invalid ingredient ID")
+        ApiResponse(responseCode = "200", description = "The ingredient data"),
+        ApiResponse(responseCode = "400", description = "Invalid ingredient ID",
+                content = [Content()])
     ])
     @GetMapping(value = ["/{id}"], produces = ["application/json"])
     fun getIngredient(@Parameter(description = "ID of the ingredient to retrieve", required = true)
@@ -60,9 +58,9 @@ interface IngredientPrototypeApi {
 
     @Operation(summary = "Get a list of all ingredient prototypes")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "List of all ingredient prototypes",
-                content = [Content(array = ArraySchema(schema = Schema(implementation = IngredientPrototype::class)))]),
-        ApiResponse(responseCode = "204", description = "There are no ingredient prototypes")
+        ApiResponse(responseCode = "200", description = "List of all ingredient prototypes"),
+        ApiResponse(responseCode = "204", description = "There are no ingredient prototypes",
+                content = [Content()])
     ])
     @GetMapping(value = ["/"], produces = ["application/json"])
     fun listIngredients(): ResponseEntity<List<IngredientPrototype>>
@@ -70,7 +68,8 @@ interface IngredientPrototypeApi {
     @Operation(summary = "Add a new ingredient prototype")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Add succeeded"),
-        ApiResponse(responseCode = "400", description = "Invalid ingredient data supplied")
+        ApiResponse(responseCode = "400", description = "Invalid ingredient data supplied",
+                content = [Content()])
     ])
     @PostMapping(value = ["/"], consumes = ["application/json"])
     fun addIngredient(@Parameter(description = "Ingredient prototype to add", required = true)
