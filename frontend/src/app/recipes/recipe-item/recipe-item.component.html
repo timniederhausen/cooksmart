@@ -16,8 +16,11 @@ Copyright 2020 Felix Burk, Tim Niederhausen
 <ng-container>
   <div class="row">
     <div class="col">
-      <h1>{{recipe.name}}</h1>
-      <ngb-rating class="align-self-center p-2" [(rate)]="recipe.rating"></ngb-rating>
+      <div class="horizontal-item-container recipe-header">
+        <h1>{{recipe.name}}</h1>
+        <button type="button" class="btn btn-sm"><i class="material-icons">edit</i></button>
+      </div>
+      <ngb-rating class="align-self-center" [(rate)]="recipe.rating"></ngb-rating>
       <div>
         {{recipe.description}}
       </div>
@@ -30,7 +33,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <ng-container>
     <h3>Ingredients</h3>
     <div class="m-2" *ngFor="let ingredient of this.recipe.ingredients">
-      <div class="item-container">
+      <div class="horizontal-item-container">
         <div class="item-container-left">
           <div class="p-2">
             {{ingredient.quantity}} {{ingredient.unit}}
@@ -39,8 +42,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
             {{ingredient.prototype.name}}
           </div>
         </div>
-        <div class="item-container-right btn-group-sm">
-          <button type="button" class="btn btn-sm"><i class="material-icons">edit</i></button>
+        <div class="item-container-right">
           <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
         </div>
       </div>
