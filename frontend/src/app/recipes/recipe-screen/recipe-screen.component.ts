@@ -11,51 +11,89 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, OnInit } from '@angular/core';
-import { Recipe, RecipeService } from '../../data';
-import { Observable, of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {SmartListComponent} from "../../smart-list/smart-list.component";
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Pageable, PageRecipe, Recipe, RecipeService } from '../../data';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-screen',
   templateUrl: './recipe-screen.component.html',
   styleUrls: ['./recipe-screen.component.scss'],
 })
-export class RecipeScreenComponent implements OnInit {
-  recipes$: Observable<Recipe[]> = of(
-    [{name:'blah', rating: 33, image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",
-      ingredients: [{unit:"kg", quantity:3, id:0,
-        prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}},
-        {unit:"kg", quantity:3, id:0,
-          prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]},
-      {name: 'bluh', rating: 33333, image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",
-        ingredients: [{unit:"kg", quantity:3, id:0,
-          prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]},
-      {name: 'blabb', rating: 33333, image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",
-        ingredients: [{unit:"kg", quantity:3, id:0,
-          prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]}
-          ]);
-  private searchTerms = new Subject<string>();
+export class RecipeScreenComponent implements OnInit, AfterViewInit {
+  recipes$: Observable<PageRecipe>;
+  recipesList$: Observable<Recipe[]>;
+  recipes: PageRecipe;
 
-  recipeList: SmartListComponent<Recipe>;
+  private searchTerms$ = new Subject<string>();
+  private pageWanted$ = new Subject<Pageable>();
 
-  constructor(private recipeService: RecipeService) {}
+  constructor(private readonly recipeService: RecipeService) {}
 
   ngOnInit() {
-    /*this.recipes$ = this.searchTerms.pipe(
-      // wait 300ms after each keystroke before considering the term
-      debounceTime(300),
+    this.recipes$ = combineLatest([
+      this.pageWanted$,
+      this.searchTerms$.pipe(
+        // wait 300ms after each keystroke before considering the term
+        debounceTime(300),
 
-      // ignore new term if same as previous term
-      distinctUntilChanged(),
+        // ignore new term if same as previous term
+        distinctUntilChanged(),
+      ),
+    ])
+      .pipe(
+        // switch to new search observable each time the term / page changes
+        switchMap(([pageable, term]) => {
+          console.log('FUUUCKKKK');
+          if (!pageable) return this.recipeService.listRecipes(term);
+          return this.recipeService.listRecipes(
+            term,
+            pageable.page,
+            pageable.size,
+            pageable.sort,
+          );
+        }),
 
-      // switch to new search observable each time the term changes
-      switchMap((term: string) => this.recipeService.listRecipes(term)),
-    );*/
+        catchError((err) => {
+          console.log(err);
+          return of({ first: true, content: [] } as PageRecipe);
+        }),
+      )
+      .pipe(
+        tap((recipes) => {
+          if (recipes.first) this.recipes = recipes;
+          else
+            this.recipes = {
+              ...recipes,
+              content: this.recipes.content.concat(recipes.content),
+            };
+        }),
+      );
+    this.recipesList$ = this.recipes$.pipe(map((pr) => pr.content ?? []));
   }
 
-  search(term: string): void {
-    this.searchTerms.next(term);
+  ngAfterViewInit() {
+    this.pageWanted$.next({});
+    this.searchTerms$.next('');
+  }
+
+  search(term: string) {
+    this.searchTerms$.next(term);
+  }
+
+  loadMore() {
+    if (!this.recipes.pageable || this.recipes.last) return;
+    this.pageWanted$.next({
+      ...this.recipes.pageable,
+      page: this.recipes.pageable.page + 1,
+    });
   }
 }

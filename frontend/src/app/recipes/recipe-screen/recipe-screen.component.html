@@ -25,7 +25,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     />
   </form>
   <div class="container p-0">
-    <app-smart-list #recipeList [items]="recipes$">
+    <app-smart-list #recipeList [items]="recipesList$">
       <ng-container *header="let item">
         <button
           class="btn horizontal-item-container"
