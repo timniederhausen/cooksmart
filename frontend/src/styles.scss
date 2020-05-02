@@ -4,3 +4,26 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~material-design-icons/iconfont/material-icons.css';
+
+.item-container {
+  display:flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-container-left {
+  display:flex;
+  justify-content: flex-start;
+}
+
+.item-container-right {
+  display:flex;
+  justify-content: flex-end;
+}
+
+.btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}

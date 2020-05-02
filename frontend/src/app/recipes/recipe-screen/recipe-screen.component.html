@@ -28,11 +28,17 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     <app-smart-list #recipeList [items]="recipes$">
       <ng-container *header="let item">
         <button
-          class="btn btn-link"
+          class="btn item-container"
           [class.collapsed]="!item.isOpen"
           (click)="recipeList.toggle(item.id)"
         >
-          {{ item.name }}
+          <div class="item-container-left">
+            {{ item.name }}
+          </div>
+          <div class="item-container-right btn-group-sm">
+            <button type="button" class="btn btn-sm"><i class="material-icons">edit</i></button>
+            <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
+          </div>
         </button>
       </ng-container>
       <ng-container *content="let item">

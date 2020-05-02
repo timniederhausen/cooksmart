@@ -30,8 +30,8 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <ng-container>
     <h3>Ingredients</h3>
     <div class="m-2" *ngFor="let ingredient of this.recipe.ingredients">
-      <div class="ingredient-container">
-        <div class="ingredient-container-left">
+      <div class="item-container">
+        <div class="item-container-left">
           <div class="p-2">
             {{ingredient.quantity}} {{ingredient.unit}}
           </div>
@@ -39,7 +39,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
             {{ingredient.prototype.name}}
           </div>
         </div>
-        <div class="ingredient-container-right btn-group-sm">
+        <div class="item-container-right btn-group-sm">
           <button type="button" class="btn btn-sm"><i class="material-icons">edit</i></button>
           <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
         </div>
