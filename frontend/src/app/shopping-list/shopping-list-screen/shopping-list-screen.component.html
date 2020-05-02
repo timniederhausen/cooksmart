@@ -34,4 +34,19 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       (input)="search(searchInput.value)"
     />
   </form>
+
+  <h3>Ingredients</h3>
+  <div class="m-2" *ngFor="let ingredient of this.ingredientList">
+    <div class="horizontal-item-container">
+      <div class="item-container-left">
+        <button type="button" class="btn btn-sm"><i class="material-icons">check_box_outline_blank</i></button>
+        <div class="p-2">
+          {{ingredient.quantity}} {{ingredient.unit}}
+        </div>
+        <div class="p-2">
+          {{ingredient.prototype.name}}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
