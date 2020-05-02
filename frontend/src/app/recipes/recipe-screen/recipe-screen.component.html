@@ -14,7 +14,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  limitations under the License.
 -->
 <div class="container p-2">
-  <form class="form-inline justify-content-center parent">
+  <form class="form-inline justify-content-center parent pb-2" (submit)="$event.preventDefault()">
     <input
       #searchInput
       class="form-control search-element wide"
