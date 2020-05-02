@@ -17,17 +17,16 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <div *ngIf="!editing" class="row">
     <div class="col">
       <div class="horizontal-item-container item-container-all-start">
-        <h1>{{recipe.name}}</h1>
+        <h1>{{ingredient.name}}</h1>
         <button type="button" (click)="toggleEdit()" class="btn btn-sm"><i class="material-icons">edit</i></button>
       </div>
-      <ngb-rating class="align-self-center" (rateChange)="changeRate()" [(rate)]="recipe.rating"></ngb-rating>
       <div>
-        {{recipe.description}}
+        {{ingredient.description}}
       </div>
     </div>
     <div class="col col-6">
       <img style="width: 100%; height: 100%"
-           [src]=[recipe.image]
+           [src]=[ingredient.image]
            alt="recipe image">
     </div>
   </div>
@@ -52,22 +51,4 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     </div>
 
   </form>
-  <ng-container>
-    <h3>Ingredients</h3>
-    <div class="m-2" *ngFor="let ingredient of this.recipe.ingredients">
-      <div class="horizontal-item-container">
-        <div class="item-container-left">
-          <div class="p-2">
-            {{ingredient.quantity}} {{ingredient.unit}}
-          </div>
-          <div class="p-2">
-            {{ingredient.prototype.name}}
-          </div>
-        </div>
-        <div class="item-container-right">
-          <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
-        </div>
-      </div>
-    </div>
-  </ng-container>
 </ng-container>

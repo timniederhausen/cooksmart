@@ -24,15 +24,15 @@ import {SmartListComponent} from "../../smart-list/smart-list.component";
 })
 export class RecipeScreenComponent implements OnInit {
   recipes$: Observable<Recipe[]> = of(
-    [{name:'blah', rating: 33,
+    [{name:'blah', rating: 33, image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",
       ingredients: [{unit:"kg", quantity:3, id:0,
         prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}},
         {unit:"kg", quantity:3, id:0,
           prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]},
-      {name: 'bluh', rating: 33333,
+      {name: 'bluh', rating: 33333, image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",
         ingredients: [{unit:"kg", quantity:3, id:0,
           prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]},
-      {name: 'blabb', rating: 33333,
+      {name: 'blabb', rating: 33333, image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",
         ingredients: [{unit:"kg", quantity:3, id:0,
           prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]}
           ]);

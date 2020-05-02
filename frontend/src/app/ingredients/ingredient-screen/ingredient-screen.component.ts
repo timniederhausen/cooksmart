@@ -13,7 +13,7 @@
 // limitations under the License.
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { Ingredient, IngredientService, Recipe } from '../../data';
+import { Ingredient, IngredientProtoService, IngredientPrototype, IngredientService, Recipe } from '../../data';
 import { SmartListComponent } from '../../smart-list/smart-list.component';
 
 @Component({
@@ -22,14 +22,17 @@ import { SmartListComponent } from '../../smart-list/smart-list.component';
   styleUrls: ['./ingredient-screen.component.scss']
 })
 export class IngredientScreenComponent implements OnInit {
-  ingredients$: Observable<Ingredient[]> = of(
-    [{id:0,prototype:{image:"",id:0,description:"looooong placeholder", name:"pizza"},
-      quantity:10,unit:"kg"}]);
+  ingredients$: Observable<IngredientPrototype[]> = of(
+    [
+      {image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",id:0,description:"looooong placeholder", name:"pizza"},
+      {image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",id:0,description:"looooong placeholder", name:"pizza2"},
+      {image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",id:0,description:"looooong placeholder", name:"pizza3"},
+    ]);
   private searchTerms = new Subject<string>();
 
-  ingredientList: SmartListComponent<Recipe>;
+  ingredientList: SmartListComponent<IngredientPrototype>;
 
-  constructor(private ingredientService: IngredientService) {}
+  constructor(private ingredientProtoService: IngredientProtoService) {}
 
   ngOnInit() {
   }

@@ -11,33 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, Input, OnInit } from '@angular/core';
-import { Ingredient } from '../../data';
-
-@Component({
-  selector: 'app-ingredient-item',
-  templateUrl: './ingredient-item.component.html',
-  styleUrls: ['./ingredient-item.component.scss']
-})
-export class IngredientItemComponent implements OnInit {
-  @Input()
-  ingredient: Ingredient = undefined;
-
-  editing: boolean = false;
-
-  ngOnInit() {
-  }
-
-  toggleEdit() {
-    this.editing = !this.editing;
-  }
-
-  saveEdit() {
-    //TODO
-  }
-
-  changeRate() {
-    //TODO
-  }
-
+.item-container-all-start{
+  justify-content: flex-start;
 }

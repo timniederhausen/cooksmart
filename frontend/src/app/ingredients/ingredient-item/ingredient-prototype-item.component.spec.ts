@@ -13,21 +13,21 @@
 // limitations under the License.
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IngredientItemComponent } from './ingredient-item.component';
+import { IngredientPrototypeItemComponent } from './ingredient-prototype-item.component';
 
 describe('IngredientItemComponent', () => {
-  let component: IngredientItemComponent;
-  let fixture: ComponentFixture<IngredientItemComponent>;
+  let component: IngredientPrototypeItemComponent;
+  let fixture: ComponentFixture<IngredientPrototypeItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IngredientItemComponent ]
+      declarations: [ IngredientPrototypeItemComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IngredientItemComponent);
+    fixture = TestBed.createComponent(IngredientPrototypeItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

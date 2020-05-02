@@ -11,3 +11,33 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import { Component, Input, OnInit } from '@angular/core';
+import { IngredientPrototype } from '../../data';
+
+@Component({
+  selector: 'app-ingredient-item',
+  templateUrl: './ingredient-prototype-item.component.html',
+  styleUrls: ['./ingredient-prototype-item.component.scss']
+})
+export class IngredientPrototypeItemComponent implements OnInit {
+  @Input()
+  ingredient: IngredientPrototype = undefined;
+
+  editing: boolean = false;
+
+  ngOnInit() {
+  }
+
+  toggleEdit() {
+    this.editing = !this.editing;
+  }
+
+  saveEdit() {
+    //TODO
+  }
+
+  changeRate() {
+    //TODO
+  }
+
+}

@@ -30,7 +30,7 @@ import { RecipeItemComponent } from './recipes/recipe-item/recipe-item.component
 import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.component';
 import { ApiModule } from './data';
 import { HttpClientModule } from "@angular/common/http";
-import { IngredientItemComponent } from './ingredients/ingredient-item/ingredient-item.component';
+import { IngredientPrototypeItemComponent } from './ingredients/ingredient-item/ingredient-prototype-item.component';
 import { IngredientScreenComponent } from './ingredients/ingredient-screen/ingredient-screen.component';
 import { ShoppingListScreenComponent } from './shopping-list/shopping-list-screen/shopping-list-screen.component';
 import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/shopping-list-item.component';
@@ -42,7 +42,7 @@ import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/sh
     HeaderDirective, ContentDirective,
     RecipeItemComponent,
     RecipeScreenComponent,
-    IngredientItemComponent,
+    IngredientPrototypeItemComponent,
     IngredientScreenComponent,
     ShoppingListScreenComponent,
     ShoppingListItemComponent,
