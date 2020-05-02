@@ -24,21 +24,24 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     </div>
     <div class="col col-6">
       <img style="width: 100%; height: 100%"
-           src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2018/12/Shakshuka-19.jpg">
+           src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2018/12/Shakshuka-19.jpg" alt="recipe image">
     </div>
   </div>
   <ng-container>
     <h3>Ingredients</h3>
     <div class="m-2" *ngFor="let ingredient of this.recipe.ingredients">
-      <div class="row">
-        <div class="col col-md-auto">
-          {{ingredient.quantity}} {{ingredient.unit}}
+      <div class="ingredient-container">
+        <div class="ingredient-container-left">
+          <div class="p-2">
+            {{ingredient.quantity}} {{ingredient.unit}}
+          </div>
+          <div class="p-2">
+            {{ingredient.prototype.name}}
+          </div>
         </div>
-        <div class="col">
-          {{ingredient.prototype.name}}
-        </div>
-        <div class="col">
-          <i class="material-icons">clear</i>
+        <div class="ingredient-container-right btn-group-sm">
+          <button type="button" class="btn btn-sm"><i class="material-icons">edit</i></button>
+          <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
         </div>
       </div>
     </div>

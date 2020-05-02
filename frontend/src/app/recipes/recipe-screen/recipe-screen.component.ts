@@ -23,7 +23,19 @@ import {SmartListComponent} from "../../smart-list/smart-list.component";
   styleUrls: ['./recipe-screen.component.scss'],
 })
 export class RecipeScreenComponent implements OnInit {
-  recipes$: Observable<Recipe[]> = of([{name:'blah', rating: 33}, {name: 'bluh', rating: 33333}, {name: 'blabb', rating: 33333}]);
+  recipes$: Observable<Recipe[]> = of(
+    [{name:'blah', rating: 33,
+      ingredients: [{unit:"kg", quantity:3, id:0,
+        prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}},
+        {unit:"kg", quantity:3, id:0,
+          prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]},
+      {name: 'bluh', rating: 33333,
+        ingredients: [{unit:"kg", quantity:3, id:0,
+          prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]},
+      {name: 'blabb', rating: 33333,
+        ingredients: [{unit:"kg", quantity:3, id:0,
+          prototype:{name:"Fries",description:"LOOOONG PLACEHOLDER", id:0 ,image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"}}]}
+          ]);
   private searchTerms = new Subject<string>();
 
   recipeList: SmartListComponent<Recipe>;

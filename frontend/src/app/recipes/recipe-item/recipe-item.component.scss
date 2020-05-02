@@ -11,3 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+.ingredient-container {
+  display:flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingredient-container-left {
+  display:flex;
+  justify-content: flex-start;
+}
+
+.ingredient-container-right {
+  display:flex;
+  justify-content: flex-end;
+}
+
+.btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}
