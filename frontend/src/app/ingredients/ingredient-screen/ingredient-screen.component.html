@@ -1,3 +1,48 @@
+<!--
+Copyright 2020 Felix Burk, Tim Niederhausen
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 <div class="container p-2">
-  <p>ingredient-screen works!</p>
+  <form class="form-inline justify-content-center parent pb-2" (submit)="$event.preventDefault()">
+    <input
+      #searchInput
+      class="form-control search-element wide"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+      (input)="search(searchInput.value)"
+    />
+  </form>
+  <div class="container p-0">
+    <app-smart-list #ingredientList [items]="ingredients$">
+      <ng-container *header="let item">
+        <button
+          class="btn horizontal-item-container"
+          [class.collapsed]="!item.isOpen"
+          (click)="ingredientList.toggle(item.id)"
+        >
+          <div class="item-container-left">
+            {{ item.prototype.name }}
+          </div>
+          <div class="item-container-right">
+            <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
+          </div>
+        </button>
+      </ng-container>
+      <ng-container *content="let item">
+        <app-ingredient-item [ingredient]="item"></app-ingredient-item>
+      </ng-container>
+    </app-smart-list>
+  </div>
 </div>
