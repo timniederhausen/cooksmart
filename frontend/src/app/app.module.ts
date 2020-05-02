@@ -29,7 +29,11 @@ import {
 import { RecipeItemComponent } from './recipes/recipe-item/recipe-item.component';
 import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.component';
 import { ApiModule } from './data';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
+import { IngredientItemComponent } from './ingredients/ingredient-item/ingredient-item.component';
+import { IngredientScreenComponent } from './ingredients/ingredient-screen/ingredient-screen.component';
+import { ShoppingListScreenComponent } from './shopping-list/shopping-list-screen/shopping-list-screen.component';
+import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/shopping-list-item.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +42,10 @@ import {HttpClientModule} from "@angular/common/http";
     HeaderDirective, ContentDirective,
     RecipeItemComponent,
     RecipeScreenComponent,
+    IngredientItemComponent,
+    IngredientScreenComponent,
+    ShoppingListScreenComponent,
+    ShoppingListItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,4 +60,5 @@ import {HttpClientModule} from "@angular/common/http";
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

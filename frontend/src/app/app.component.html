@@ -25,11 +25,14 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item-active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/recipes']" [routerLinkActive]="['active']">Recipes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Shopping List</a>
+          <a class="nav-link" [routerLink]="['/ingredients']" [routerLinkActive]="['active']">Ingredients</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/shopping-list']" [routerLinkActive]="['active']">Shopping List</a>
         </li>
       </ul>
     </div>
@@ -43,13 +46,13 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <div class="">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" (click)="closeNavbar()" routerLink="shopping-list">Shopping List</a>
+        <a class="nav-link" [routerLink]="['/recipes']" [routerLinkActive]="['active']">Recipes</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" (click)="closeNavbar()" routerLink="shopping-list">Recipes</a>
+        <a class="nav-link" [routerLink]="['/ingredients']" [routerLinkActive]="['active']">Ingredients</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" (click)="closeNavbar()" routerLink="shopping-list">Ingredients</a>
+        <a class="nav-link" [routerLink]="['/shopping-list']" [routerLinkActive]="['active']">Shopping List</a>
       </li>
     </ul>
   </div>
