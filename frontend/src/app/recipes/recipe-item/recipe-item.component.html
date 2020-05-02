@@ -14,22 +14,44 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  limitations under the License.
 -->
 <ng-container>
-  <div class="row">
+  <div *ngIf="!editing" class="row">
     <div class="col">
-      <div class="horizontal-item-container recipe-header">
+      <div class="horizontal-item-container item-container-all-start">
         <h1>{{recipe.name}}</h1>
-        <button type="button" class="btn btn-sm"><i class="material-icons">edit</i></button>
+        <button type="button" (click)="toggleEdit()" class="btn btn-sm"><i class="material-icons">edit</i></button>
       </div>
-      <ngb-rating class="align-self-center" [(rate)]="recipe.rating"></ngb-rating>
+      <ngb-rating class="align-self-center" (rateChange)="changeRate()" [(rate)]="recipe.rating"></ngb-rating>
       <div>
         {{recipe.description}}
       </div>
     </div>
     <div class="col col-6">
       <img style="width: 100%; height: 100%"
-           src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2018/12/Shakshuka-19.jpg" alt="recipe image">
+           src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2018/12/Shakshuka-19.jpg"
+           alt="recipe image">
     </div>
   </div>
+  <form *ngIf="editing" class="p-2">
+    <div class="form-group">
+      <label for="editName">Name</label>
+      <input type="text" class="form-control" id="editName" aria-describedby="edit name"
+             placeholder={{recipe.name}}>
+    </div>
+    <div class="form-group">
+      <label for="editDescription">Description</label>
+      <textarea class="form-control" id="editDescription" rows="3" placeholder={{recipe.description}}></textarea>
+    </div>
+    <div class="form-group">
+      <label for="editImageSrc">Image Source</label>
+      <input type="text" class="form-control" id="editImageSrc" aria-describedby="edit name"
+             placeholder={{recipe.image}}>
+    </div>
+    <div>
+      <button type="submit" (click)="saveEdit()" class="btn btn-sm btn-primary mr-2">Submit</button>
+      <button type="submit" (click)="toggleEdit()" class="btn btn-sm btn-secondary mr-2">Cancel</button>
+    </div>
+
+  </form>
   <ng-container>
     <h3>Ingredients</h3>
     <div class="m-2" *ngFor="let ingredient of this.recipe.ingredients">

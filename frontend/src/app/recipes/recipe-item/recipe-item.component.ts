@@ -23,7 +23,21 @@ export class RecipeItemComponent implements OnInit {
   @Input()
   recipe: Recipe = undefined;
 
+  editing: boolean = false;
+
   ngOnInit() {
+  }
+
+  toggleEdit() {
+    this.editing = !this.editing;
+  }
+
+  saveEdit() {
+    //TODO
+  }
+
+  changeRate() {
+    //TODO
   }
 
 }
