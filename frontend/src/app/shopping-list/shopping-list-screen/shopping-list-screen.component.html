@@ -13,6 +13,25 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<div class="container">
-  <p>shopping-list-screen works!</p>
+<div class="container p-2">
+  <div class="pill-container">
+    <span *ngFor="let recipe of this.recipeList" class="pill-content badge badge-pill badge-secondary m-1">
+      <div class="pill-container-items pl-2">
+              {{recipe.name}}
+      </div>
+      <button type="button" (click)="removeRecipe(recipe.id)" class="pill-container-items invisible-button pr-2">
+        <i class="material-icons white-image md-10">clear</i>
+      </button>
+    </span>
+  </div>
+  <form class="form-inline justify-content-center parent pb-2 m-1" (submit)="$event.preventDefault()">
+    <input
+      #searchInput
+      class="form-control search-element wide"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+      (input)="search(searchInput.value)"
+    />
+  </form>
 </div>

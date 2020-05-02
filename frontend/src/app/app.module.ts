@@ -33,7 +33,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { IngredientPrototypeItemComponent } from './ingredients/ingredient-item/ingredient-prototype-item.component';
 import { IngredientScreenComponent } from './ingredients/ingredient-screen/ingredient-screen.component';
 import { ShoppingListScreenComponent } from './shopping-list/shopping-list-screen/shopping-list-screen.component';
-import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/shopping-list-item.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +44,6 @@ import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/sh
     IngredientPrototypeItemComponent,
     IngredientScreenComponent,
     ShoppingListScreenComponent,
-    ShoppingListItemComponent,
   ],
   imports: [
     BrowserModule,
