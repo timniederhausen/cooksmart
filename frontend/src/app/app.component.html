@@ -14,23 +14,25 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  limitations under the License.
 -->
 <!-- navbar -->
-<div class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">
-    <img src="assets/brand.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-    Cooksmart
-  </a>
-  <button class="navbar-toggler" type="button"  (click)="toggleNavbar($event)" aria-controls="navbarExpanded" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item-active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Shopping List</a>
-      </li>
-    </ul>
+<div class="bg-light">
+  <div class="container navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">
+      <img src="assets/brand.svg" width="30" height="30" class="d-inline-block align-top" alt="">
+      Cooksmart
+    </a>
+    <button class="navbar-toggler" type="button"  (click)="toggleNavbar($event)" aria-controls="navbarExpanded" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item-active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Shopping List</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -52,4 +54,5 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     </ul>
   </div>
 </div>
+
 <router-outlet></router-outlet>
