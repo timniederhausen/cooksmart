@@ -27,7 +27,7 @@ export class HeaderDirective {}
 @Directive({ selector: '[content]' })
 export class ContentDirective {}
 
-type Panel<T> = T & { id: number; isOpen: boolean };
+type Panel<T> = T & { index: number; isOpen: boolean };
 
 @Component({
   selector: 'app-smart-list',
@@ -38,7 +38,7 @@ export class SmartListComponent<T> implements OnInit {
   @Input()
   items: Observable<T[]> = of([]);
 
-  private currentItems: Panel<T>[] = [];
+  currentItems: Panel<T>[] = [];
 
   @ContentChild(HeaderDirective, { read: TemplateRef, static: true })
   headerTemplate: TemplateRef<any>;
@@ -52,7 +52,7 @@ export class SmartListComponent<T> implements OnInit {
     this.items.subscribe((items) => {
       this.currentItems = items.map((item, index) => {
         const newItem = item as Panel<T>;
-        newItem.id = index;
+        newItem.index = index;
         newItem.isOpen = false;
         return newItem;
       });

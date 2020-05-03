@@ -33,7 +33,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         <div
           class="btn horizontal-item-container"
           [class.collapsed]="!item.isOpen"
-          (click)="recipeList.toggle(item.id)"
+          (click)="recipeList.toggle(item.index)"
         >
           <div class="item-container-left">
             {{ item.name }}
