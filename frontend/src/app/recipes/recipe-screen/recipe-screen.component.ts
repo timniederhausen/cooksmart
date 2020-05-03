@@ -103,7 +103,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     this.newRecipe = {
       description: '',
       image: '',
-      ingredients: undefined,
+      ingredients: [],
       rating: 0,
       name: '',
     };

@@ -28,6 +28,14 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     />
   </form>
   <div class="container p-0">
+    <div class="form-inline justify-content-between pb-2">
+      <button class="btn btn-primary" (click)="addNew()">Add new</button>
+      <div class="form-group">
+        <label for="sortBy" class="pr-2">Sort by:</label>
+        <select class="form-control" id="sortBy">
+        </select>
+      </div>
+    </div>
     <app-smart-list #recipeList [items]="recipesList$">
       <ng-container *header="let item">
         <div
@@ -56,6 +64,5 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       (cancelEdit)="newRecipe = undefined"
       (save)="saveRecipe($event)"
     ></app-recipe-item>
-    <button class="btn btn-primary" (click)="addNew()">Add new</button>
   </div>
 </div>

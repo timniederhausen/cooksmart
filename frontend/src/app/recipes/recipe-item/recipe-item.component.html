@@ -24,8 +24,8 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       </div>
       <ngb-rating
         class="align-self-center"
-        (rateChange)="changeRate()"
         [(rate)]="recipe.rating"
+        (rateChange)="changeRate()"
       ></ngb-rating>
       <div>
         {{ recipe.description }}
