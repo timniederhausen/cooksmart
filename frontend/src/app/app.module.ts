@@ -17,9 +17,9 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import {
-  NgbAccordionModule,
-  NgbCollapseModule,
-  NgbRatingModule,
+    NgbAccordionModule,
+    NgbCollapseModule,
+    NgbRatingModule, NgbTypeaheadModule,
 } from '@ng-bootstrap/ng-bootstrap';
 
 import {
@@ -58,6 +58,8 @@ import { AppComponent } from './app.component';
     NgbRatingModule,
     HttpClientModule,
     ApiModule,
+    NgbTypeaheadModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
