@@ -11,33 +11,44 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Ingredient, Recipe } from '../../data';
 
 @Component({
   selector: 'app-recipe-item',
   templateUrl: './recipe-item.component.html',
-  styleUrls: ['./recipe-item.component.scss']
+  styleUrls: ['./recipe-item.component.scss'],
 })
 export class RecipeItemComponent implements OnInit {
   @Input()
   recipe: Recipe = undefined;
 
+  @Input()
   editing: boolean = false;
 
-  ngOnInit() {
+  @Output()
+  cancelEdit = new EventEmitter();
+
+  @Output()
+  save = new EventEmitter<Recipe>();
+
+  ngOnInit() {}
+
+  startEditing() {
+    this.editing = true;
   }
 
-  toggleEdit() {
-    this.editing = !this.editing;
+  cancelEditing() {
+    this.cancelEdit.emit();
+    this.editing = false;
   }
 
   saveEdit() {
-    //TODO
+    this.save.emit(this.recipe);
+    this.editing = false;
   }
 
   changeRate() {
     //TODO
   }
-
 }

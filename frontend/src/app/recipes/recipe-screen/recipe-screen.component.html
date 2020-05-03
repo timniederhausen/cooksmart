@@ -14,7 +14,10 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  limitations under the License.
 -->
 <div class="container p-2">
-  <form class="form-inline justify-content-center parent pb-2" (submit)="$event.preventDefault()">
+  <form
+    class="form-inline justify-content-center parent pb-2"
+    (submit)="$event.preventDefault()"
+  >
     <input
       #searchInput
       class="form-control search-element wide"
@@ -27,7 +30,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <div class="container p-0">
     <app-smart-list #recipeList [items]="recipesList$">
       <ng-container *header="let item">
-        <button
+        <div
           class="btn horizontal-item-container"
           [class.collapsed]="!item.isOpen"
           (click)="recipeList.toggle(item.id)"
@@ -36,13 +39,21 @@ Copyright 2020 Felix Burk, Tim Niederhausen
             {{ item.name }}
           </div>
           <div class="item-container-right">
-            <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
+            <button type="button" class="btn btn-sm">
+              <i class="material-icons">clear</i>
+            </button>
           </div>
-        </button>
+        </div>
       </ng-container>
       <ng-container *content="let item">
         <app-recipe-item [recipe]="item"></app-recipe-item>
       </ng-container>
     </app-smart-list>
+    <app-recipe-item
+      *ngIf="newRecipe"
+      [recipe]="newRecipe"
+      [editing]="true"
+    ></app-recipe-item>
+    <button class="btn btn-primary" (click)="addNew()">Add new</button>
   </div>
 </div>

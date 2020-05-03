@@ -36,6 +36,8 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   private searchTerms$ = new Subject<string>();
   private pageWanted$ = new Subject<Pageable>();
 
+  newRecipe?: Recipe;
+
   constructor(private readonly recipeService: RecipeService) {}
 
   ngOnInit() {
@@ -95,5 +97,16 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
       ...this.recipes.pageable,
       page: this.recipes.pageable.page + 1,
     });
+  }
+
+  addNew() {
+    this.newRecipe = {
+      description: '',
+      id: 0,
+      image: '',
+      ingredients: undefined,
+      rating: 0,
+      name: '',
+    };
   }
 }

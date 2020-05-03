@@ -13,6 +13,7 @@
 // limitations under the License.
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.component';
 import { IngredientScreenComponent } from './ingredients/ingredient-screen/ingredient-screen.component';
 import { ShoppingListScreenComponent } from './shopping-list/shopping-list-screen/shopping-list-screen.component';
@@ -21,13 +22,11 @@ const routes: Routes = [
   { path: 'recipes', component: RecipeScreenComponent },
   { path: 'ingredients', component: IngredientScreenComponent },
   { path: 'shopping-list', component: ShoppingListScreenComponent },
-  { path: '', redirectTo: 'recipes', pathMatch: 'full' }
-
+  { path: '', redirectTo: 'recipes', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

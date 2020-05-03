@@ -13,32 +13,35 @@
 // limitations under the License.
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import {
   NgbAccordionModule,
   NgbCollapseModule,
   NgbRatingModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import {
-  HeaderDirective, ContentDirective,
+  HeaderDirective,
+  ContentDirective,
   SmartListComponent,
 } from './smart-list/smart-list.component';
 import { RecipeItemComponent } from './recipes/recipe-item/recipe-item.component';
 import { RecipeScreenComponent } from './recipes/recipe-screen/recipe-screen.component';
-import { ApiModule } from './data';
-import { HttpClientModule } from "@angular/common/http";
 import { IngredientPrototypeItemComponent } from './ingredients/ingredient-item/ingredient-prototype-item.component';
 import { IngredientScreenComponent } from './ingredients/ingredient-screen/ingredient-screen.component';
 import { ShoppingListScreenComponent } from './shopping-list/shopping-list-screen/shopping-list-screen.component';
+import { ApiModule } from './data';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SmartListComponent,
-    HeaderDirective, ContentDirective,
+    HeaderDirective,
+    ContentDirective,
     RecipeItemComponent,
     RecipeScreenComponent,
     IngredientPrototypeItemComponent,
@@ -47,6 +50,7 @@ import { ShoppingListScreenComponent } from './shopping-list/shopping-list-scree
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     NgbCollapseModule,
     BrowserAnimationsModule,
@@ -58,5 +62,4 @@ import { ShoppingListScreenComponent } from './shopping-list/shopping-list-scree
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
