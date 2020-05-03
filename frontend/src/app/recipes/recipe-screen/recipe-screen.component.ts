@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Pageable, PageRecipe, Recipe, RecipeService } from '../../data';
 import { combineLatest, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
@@ -22,6 +21,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
+
+import { Pageable, PageRecipe, Recipe, RecipeService } from '../../data';
 
 @Component({
   selector: 'app-recipe-screen',
@@ -101,7 +102,6 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   addNew() {
     this.newRecipe = {
       description: '',
-      id: 0,
       image: '',
       ingredients: undefined,
       rating: 0,
@@ -109,8 +109,17 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     };
   }
 
-  submitNew(recipe: Recipe) {
+  saveRecipe(recipe: Recipe) {
     console.log(recipe);
+    if (recipe.id) {
+      this.recipeService.updateRecipe(recipe.id, recipe).subscribe(
+        () => {},
+        (error) => {
+          console.log(error);
+        },
+      );
+      return;
+    }
     this.recipeService.addRecipe(recipe).subscribe(
       (addedRecipe) => {
         this.recipes.content = [addedRecipe, ...this.recipes.content];

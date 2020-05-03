@@ -46,7 +46,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         </div>
       </ng-container>
       <ng-container *content="let item">
-        <app-recipe-item [recipe]="item"></app-recipe-item>
+        <app-recipe-item [recipe]="item" (save)="saveRecipe($event)"></app-recipe-item>
       </ng-container>
     </app-smart-list>
     <app-recipe-item
@@ -54,7 +54,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       [recipe]="newRecipe"
       [editing]="true"
       (cancelEdit)="newRecipe = undefined"
-      (save)="submitNew($event)"
+      (save)="saveRecipe($event)"
     ></app-recipe-item>
     <button class="btn btn-primary" (click)="addNew()">Add new</button>
   </div>

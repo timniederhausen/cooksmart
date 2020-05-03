@@ -50,6 +50,6 @@ export class RecipeItemComponent implements OnInit {
   }
 
   changeRate() {
-    //TODO
+    this.save.emit(this.recipe);
   }
 }
