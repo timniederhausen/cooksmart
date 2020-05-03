@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Ingredient, Recipe } from '../../data';
+
+import { Recipe } from '../../data';
 
 @Component({
   selector: 'app-recipe-item',
@@ -43,7 +44,7 @@ export class RecipeItemComponent implements OnInit {
     this.editing = false;
   }
 
-  saveEdit() {
+  onSubmit() {
     this.save.emit(this.recipe);
     this.editing = false;
   }

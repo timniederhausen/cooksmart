@@ -54,7 +54,6 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
       .pipe(
         // switch to new search observable each time the term / page changes
         switchMap(([pageable, term]) => {
-          console.log('FUUUCKKKK');
           if (!pageable) return this.recipeService.listRecipes(term);
           return this.recipeService.listRecipes(
             term,
@@ -108,5 +107,18 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
       rating: 0,
       name: '',
     };
+  }
+
+  submitNew(recipe: Recipe) {
+    console.log(recipe);
+    this.recipeService.addRecipe(recipe).subscribe(
+      (addedRecipe) => {
+        this.recipes.content = [addedRecipe, ...this.recipes.content];
+        this.newRecipe = undefined;
+      },
+      (error) => {
+        console.log(error);
+      },
+    );
   }
 }

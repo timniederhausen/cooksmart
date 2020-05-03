@@ -39,13 +39,14 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       />
     </div>
   </div>
-  <form *ngIf="editing" class="p-2">
+  <form (ngSubmit)="onSubmit()" #recipeForm="ngForm" *ngIf="editing" class="p-2">
     <div class="form-group">
       <label for="editName">Name</label>
       <input
         type="text"
         class="form-control"
         id="editName"
+        name="name"
         aria-describedby="edit name"
         [(ngModel)]="recipe.name"
       />
@@ -55,6 +56,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       <textarea
         class="form-control"
         id="editDescription"
+        name="description"
         rows="3"
         [(ngModel)]="recipe.description"
       ></textarea>
@@ -65,15 +67,16 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         type="text"
         class="form-control"
         id="editImageSrc"
-        aria-describedby="edit name"
+        name="image"
+        aria-describedby="edit recipe image"
         [(ngModel)]="recipe.image"
       />
     </div>
     <div>
       <button
         type="submit"
-        (click)="saveEdit()"
         class="btn btn-sm btn-primary mr-2"
+        [disabled]="!recipeForm.form.valid"
       >
         Submit
       </button>
