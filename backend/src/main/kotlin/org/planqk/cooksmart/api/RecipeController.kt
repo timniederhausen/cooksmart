@@ -29,7 +29,7 @@ class RecipeController(private val recipes: RecipeRepository) : RecipeApi {
 
     override fun updateRecipe(id: Long, recipe: Recipe): ResponseEntity<Unit> {
         recipes.save(recipe.copy(id = id))
-        return ResponseEntity(HttpStatus.CREATED)
+        return ResponseEntity(HttpStatus.OK)
     }
 
     override fun listRecipes(query: String?,
