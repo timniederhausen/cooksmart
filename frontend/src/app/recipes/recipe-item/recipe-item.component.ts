@@ -68,6 +68,7 @@ export class RecipeItemComponent implements OnInit {
 
   constructor(
     private readonly ingredientProtoService: IngredientProtoService,
+    private readonly ingredientService: IngredientService,
     private readonly recipeService: RecipeService,
   ) {}
 
@@ -122,16 +123,19 @@ export class RecipeItemComponent implements OnInit {
   selectedIngredient($event: NgbTypeaheadSelectItemEvent) {
     this.addingNewIngredients = !this.addingNewIngredients;
     const newIngredientProto: IngredientPrototype = $event.item;
-    this.recipe.ingredients.push({
+    const newIngredient = {
       prototype: newIngredientProto,
       id: 0,
       quantity: 0,
       unit: '',
-    });
-    this.recipeService.updateRecipe(this.recipe.id, this.recipe).subscribe(
+    };
+    this.ingredientService.addIngredient(newIngredient).subscribe(
+      (addedIngredient) => {
+        this.recipe.ingredients.push(addedIngredient);
+      },
       (error) => {
         console.log(error);
-      },
+      }
     );
   }
 
