@@ -33,15 +33,20 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   </div>
   <form
     class="form-inline justify-content-center parent pb-2 m-1"
-    (submit)="$event.preventDefault()"
+    #searchForm="ngForm"
   >
     <input
-      #searchInput
+      id="typeahead-focus"
+      type="text"
       class="form-control search-element wide"
-      type="search"
-      placeholder="Search"
-      aria-label="Search"
-      (input)="search(searchInput.value)"
+      [editable]="false"
+      [inputFormatter]="recipeSearchFormatter"
+      [resultFormatter]="recipeSearchFormatter"
+      [ngbTypeahead]="recipeSearch"
+      placeholder="Search for Recipes"
+      (selectItem)="selectedRecipe($event)"
+      (focus)="this.refresh$.next()"
+      (click)="onFocus($event)"
     />
   </form>
 
