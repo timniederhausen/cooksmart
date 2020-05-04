@@ -117,7 +117,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         [ngbTypeahead]="ingredientSearch"
         placeholder="Search for Ingredients"
         (selectItem)="selectedIngredient($event)"
-        (focus)="ingredientSearch($any($event).target.value)"
+        (focus)="this.refresh$.next()"
         #instance="ngbTypeahead"
       />
       <button type="button" (click)="addingNewIngredients = !addingNewIngredients" class="btn btn-sm"><i

@@ -19,7 +19,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -63,6 +63,8 @@ export class RecipeItemComponent implements OnInit {
   @Output()
   save = new EventEmitter<Recipe>();
 
+  refresh$ = new BehaviorSubject<void>(undefined);
+
   constructor(
     private readonly ingredientProtoService: IngredientProtoService,
   ) {}
@@ -97,10 +99,10 @@ export class RecipeItemComponent implements OnInit {
   ingredientSearchFormatter = (result: IngredientPrototype) => result.name;
 
   ingredientSearch = (text$: Observable<string>) => {
-    return text$.pipe(
+    return combineLatest([text$, this.refresh$]).pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap((term) =>
+      switchMap(([term]) =>
         this.ingredientProtoService
           .listIngredients(term)
           .pipe(map((p) => p.content.filter(this.isNewIngredient))),
@@ -111,11 +113,11 @@ export class RecipeItemComponent implements OnInit {
   selectedIngredient($event: NgbTypeaheadSelectItemEvent) {
     this.addingNewIngredients = !this.addingNewIngredients;
     const newIngredientProto: IngredientPrototype = $event.item;
-    const newIngredient: Ingredient = {
+    this.recipe.ingredients.push({
       prototype: newIngredientProto,
       id: 0,
       quantity: 0,
-    };
-    this.recipe.ingredients.push(newIngredient);
+      unit: '',
+    });
   }
 }
