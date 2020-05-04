@@ -55,8 +55,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Swagger / OpenAPI
-    implementation("org.springdoc:springdoc-openapi-ui:1.3.4")
-    implementation("org.springdoc:springdoc-openapi-data-rest:1.3.4")
+    implementation("org.springdoc:springdoc-openapi-ui:1.3.8")
+    implementation("org.springdoc:springdoc-openapi-data-rest:1.3.8")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.3.8")
 
     // Chosen DB: postgres
     runtimeOnly("org.postgresql:postgresql")
