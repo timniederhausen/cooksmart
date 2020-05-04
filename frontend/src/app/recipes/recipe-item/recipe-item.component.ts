@@ -21,6 +21,14 @@ import {
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import {
+  Ingredient,
+  IngredientProtoService,
+  IngredientPrototype,
+  IngredientService,
+  Recipe,
+  RecipeService,
+} from '../../data';
+import {
   debounceTime,
   distinctUntilChanged,
   map,
@@ -30,13 +38,6 @@ import {
   NgbTypeahead,
   NgbTypeaheadSelectItemEvent,
 } from '@ng-bootstrap/ng-bootstrap';
-
-import {
-  Ingredient,
-  IngredientProtoService,
-  IngredientPrototype,
-  Recipe,
-} from '../../data';
 
 export interface StatefulRecipe extends Recipe {
   removedIngredients?: Ingredient[];
@@ -67,6 +68,7 @@ export class RecipeItemComponent implements OnInit {
 
   constructor(
     private readonly ingredientProtoService: IngredientProtoService,
+    private readonly recipeService: RecipeService,
   ) {}
 
   ngOnInit() {}
@@ -90,7 +92,14 @@ export class RecipeItemComponent implements OnInit {
   }
 
   deleteIngredient(id: number) {
-    //TODO
+    this.recipe.ingredients = this.recipe.ingredients.filter(
+      (r) => r.id !== id,
+    );
+    this.recipeService.updateRecipe(this.recipe.id, this.recipe).subscribe(
+      (error) => {
+        console.log(error);
+      },
+    );
   }
 
   isNewIngredient = (proto: IngredientPrototype) =>
@@ -119,5 +128,18 @@ export class RecipeItemComponent implements OnInit {
       quantity: 0,
       unit: '',
     });
+    this.recipeService.updateRecipe(this.recipe.id, this.recipe).subscribe(
+      (error) => {
+        console.log(error);
+      },
+    );
+  }
+
+  public onFocus(e: Event): void {
+    e.stopPropagation();
+    setTimeout(() => {
+      const inputEvent: Event = new Event('input');
+      e.target.dispatchEvent(inputEvent);
+    }, 0);
   }
 }

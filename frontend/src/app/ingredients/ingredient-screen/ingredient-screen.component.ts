@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { combineLatest, Observable, of, Subject } from 'rxjs';
 import {
   Ingredient, IngredientProtoService, IngredientPrototype, IngredientService, Pageable, PageIngredientPrototype,
@@ -26,7 +26,7 @@ import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } f
   templateUrl: './ingredient-screen.component.html',
   styleUrls: ['./ingredient-screen.component.scss']
 })
-export class IngredientScreenComponent implements OnInit {
+export class IngredientScreenComponent implements OnInit, AfterViewInit {
   ingredients$: Observable<PageIngredientPrototype>;
   ingredientsList$: Observable<IngredientPrototype[]>;
   ingredients: PageIngredientPrototype;
@@ -36,7 +36,7 @@ export class IngredientScreenComponent implements OnInit {
 
   newIngredient?: IngredientPrototype;
 
-  constructor(private ingredientProtoService: IngredientProtoService) {
+  constructor(private readonly ingredientProtoService: IngredientProtoService) {
   }
 
   ngOnInit() {

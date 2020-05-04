@@ -39,7 +39,11 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       />
     </div>
   </div>
-  <form (ngSubmit)="onSubmit()" #recipeForm="ngForm" *ngIf="editing" class="p-2">
+  <form
+    (ngSubmit)="onSubmit()"
+    #recipeForm="ngForm"
+    *ngIf="editing"
+  >
     <div class="form-group">
       <label for="editName">Name</label>
       <input
@@ -91,7 +95,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   </form>
   <ng-container>
     <h3>Ingredients</h3>
-    <div class="m-2" *ngFor="let ingredient of this.recipe.ingredients">
+    <div *ngFor="let ingredient of this.recipe.ingredients">
       <div class="horizontal-item-container">
         <div class="item-container-left">
           <div class="p-2">{{ ingredient.quantity }} {{ ingredient.unit }}</div>
@@ -100,28 +104,49 @@ Copyright 2020 Felix Burk, Tim Niederhausen
           </div>
         </div>
         <div *ngIf="editing" class="item-container-right">
-          <button type="button" (click)="deleteIngredient(ingredient.id)" class="btn btn-sm"><i class="material-icons">clear</i>
+          <button
+            type="button"
+            (click)="deleteIngredient(ingredient.id)"
+            class="btn btn-sm"
+          >
+            <i class="material-icons">clear</i>
           </button>
         </div>
       </div>
     </div>
     <div *ngIf="editing && !addingNewIngredients">
-      <button type="button" (click)="addingNewIngredients = !addingNewIngredients" class="btn btn-sm">Add new</button>
+      <button
+        type="button"
+        (click)="addingNewIngredients = !addingNewIngredients"
+        class="btn btn-sm btn-primary mr-2"
+      >
+        Add new
+      </button>
     </div>
-    <div *ngIf="editing && addingNewIngredients" class="horizontal-item-container p-2">
+    <div
+      *ngIf="editing && addingNewIngredients"
+      class="horizontal-item-container p-2"
+    >
       <input
         id="typeahead-focus"
         type="text"
         class="form-control"
+        [editable]="false"
         [resultFormatter]="ingredientSearchFormatter"
         [ngbTypeahead]="ingredientSearch"
         placeholder="Search for Ingredients"
         (selectItem)="selectedIngredient($event)"
         (focus)="this.refresh$.next()"
+        (click)="onFocus($event)"
         #instance="ngbTypeahead"
       />
-      <button type="button" (click)="addingNewIngredients = !addingNewIngredients" class="btn btn-sm"><i
-        class="material-icons">cancel</i></button>
+      <button
+        type="button"
+        (click)="addingNewIngredients = !addingNewIngredients"
+        class="btn btn-sm"
+      >
+        <i class="material-icons">cancel</i>
+      </button>
     </div>
   </ng-container>
 </ng-container>
