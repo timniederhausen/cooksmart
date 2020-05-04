@@ -19,18 +19,10 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {
-  Ingredient,
-  IngredientProtoService,
-  IngredientPrototype,
-  IngredientService,
-  Recipe,
-} from '../../data';
-import { merge, Observable, pipe, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
-  filter,
   map,
   switchMap,
 } from 'rxjs/operators';
@@ -38,6 +30,17 @@ import {
   NgbTypeahead,
   NgbTypeaheadSelectItemEvent,
 } from '@ng-bootstrap/ng-bootstrap';
+
+import {
+  Ingredient,
+  IngredientProtoService,
+  IngredientPrototype,
+  Recipe,
+} from '../../data';
+
+export interface StatefulRecipe extends Recipe {
+  removedIngredients?: Ingredient[];
+}
 
 @Component({
   selector: 'app-recipe-item',
@@ -61,7 +64,6 @@ export class RecipeItemComponent implements OnInit {
   save = new EventEmitter<Recipe>();
 
   constructor(
-    private readonly ingredientService: IngredientService,
     private readonly ingredientProtoService: IngredientProtoService,
   ) {}
 

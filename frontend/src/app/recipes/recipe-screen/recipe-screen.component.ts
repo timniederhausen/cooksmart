@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 
-import { Pageable, PageRecipe, Recipe, RecipeService } from '../../data';
+import { PageRecipe, Recipe, RecipeService } from '../../data';
+import { PageableEntityService } from '../../core/pageable-entity.service';
+import { StatefulRecipe } from '../recipe-item/recipe-item.component';
 
 @Component({
   selector: 'app-recipe-screen',
@@ -30,60 +25,52 @@ import { Pageable, PageRecipe, Recipe, RecipeService } from '../../data';
   styleUrls: ['./recipe-screen.component.scss'],
 })
 export class RecipeScreenComponent implements OnInit, AfterViewInit {
-  recipes$: Observable<PageRecipe>;
-  recipesList$: Observable<Recipe[]>;
+  recipePageService: PageableEntityService<Recipe, string>;
+
+  recipesList$: Observable<StatefulRecipe[]>;
   recipes: PageRecipe;
 
   private searchTerms$ = new Subject<string>();
-  private pageWanted$ = new Subject<Pageable>();
 
-  newRecipe?: Recipe;
+  newRecipe?: StatefulRecipe;
 
-  constructor(private readonly recipeService: RecipeService) {}
+  constructor(private readonly recipeService: RecipeService) {
+    this.recipePageService = new PageableEntityService<Recipe, string>(
+      (state) => {
+        console.log(state);
+        return this.recipeService.listRecipes(
+          state.query ? state.query : undefined,
+          state.pageable?.page,
+          state.pageable?.size,
+          state.pageable?.sort,
+        );
+      },
+    );
+  }
 
   ngOnInit() {
-    this.recipes$ = combineLatest([
-      this.pageWanted$,
-      this.searchTerms$.pipe(
-        // wait 300ms after each keystroke before considering the term
-        debounceTime(300),
-
+    this.searchTerms$
+      .pipe(
         // ignore new term if same as previous term
         distinctUntilChanged(),
-      ),
-    ])
-      .pipe(
-        // switch to new search observable each time the term / page changes
-        switchMap(([pageable, term]) => {
-          if (!pageable) return this.recipeService.listRecipes(term);
-          return this.recipeService.listRecipes(
-            term,
-            pageable.page,
-            pageable.size,
-            pageable.sort,
-          );
-        }),
-
-        catchError((err) => {
-          console.log(err);
-          return of({ first: true, content: [] } as PageRecipe);
-        }),
       )
-      .pipe(
-        tap((recipes) => {
-          if (recipes.first) this.recipes = recipes;
-          else
-            this.recipes = {
-              ...recipes,
-              content: this.recipes.content.concat(recipes.content),
-            };
-        }),
-      );
-    this.recipesList$ = this.recipes$.pipe(map((pr) => pr.content ?? []));
+      .subscribe((term) => {
+        console.log('SEARCH ' + term);
+        this.recipePageService.state.query = term;
+        this.recipePageService.reload();
+      });
+    const recipePage$ = this.recipePageService.entities$.pipe(
+      catchError((err) => {
+        console.log(err);
+        return of({ first: true, content: [] } as PageRecipe);
+      }),
+    );
+    this.recipesList$ = recipePage$.pipe(
+      map((pr) => (pr.content as Array<StatefulRecipe>) ?? []),
+    );
   }
 
   ngAfterViewInit() {
-    this.pageWanted$.next({});
     this.searchTerms$.next('');
   }
 
@@ -92,11 +79,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   }
 
   loadMore() {
-    if (!this.recipes.pageable || this.recipes.last) return;
-    this.pageWanted$.next({
-      ...this.recipes.pageable,
-      page: this.recipes.pageable.page + 1,
-    });
+    this.recipePageService.loadMore();
   }
 
   addNew() {
@@ -109,7 +92,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     };
   }
 
-  saveRecipe(recipe: Recipe) {
+  saveRecipe(recipe: StatefulRecipe) {
     console.log(recipe);
     if (recipe.id) {
       this.recipeService.updateRecipe(recipe.id, recipe).subscribe(
@@ -118,11 +101,14 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
           console.log(error);
         },
       );
+      for (let ingredient of recipe.removedIngredients ?? []) {
+        //
+      }
       return;
     }
     this.recipeService.addRecipe(recipe).subscribe(
       (addedRecipe) => {
-        this.recipes.content = [addedRecipe, ...this.recipes.content];
+        this.recipePageService.reload();
         this.newRecipe = undefined;
       },
       (error) => {
