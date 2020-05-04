@@ -9,22 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Pageable } from './pageable';
 import { Recipe } from './recipe';
-import { Sort } from './sort';
+import { SimplePageable } from './simple-pageable';
 
 
-export interface PageRecipe { 
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: Array<Recipe>;
-    number?: number;
-    sort?: Sort;
-    numberOfElements?: number;
-    first?: boolean;
-    pageable?: Pageable;
-    last?: boolean;
-    empty?: boolean;
+export interface SimplePageRecipe { 
+    page: number;
+    totalPages: number;
+    first: boolean;
+    last: boolean;
+    size: number;
+    totalElements: number;
+    pageable: SimplePageable;
+    content: Array<Recipe>;
 }
 

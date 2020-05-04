@@ -9,22 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Pageable } from './pageable';
 import { IngredientPrototype } from './ingredient-prototype';
-import { Sort } from './sort';
+import { SimplePageable } from './simple-pageable';
 
 
-export interface PageIngredientPrototype { 
-    totalElements?: number;
-    totalPages?: number;
-    size?: number;
-    content?: Array<IngredientPrototype>;
-    number?: number;
-    sort?: Sort;
-    numberOfElements?: number;
-    first?: boolean;
-    pageable?: Pageable;
-    last?: boolean;
-    empty?: boolean;
+export interface SimplePageIngredientPrototype { 
+    page: number;
+    totalPages: number;
+    first: boolean;
+    last: boolean;
+    size: number;
+    totalElements: number;
+    pageable: SimplePageable;
+    content: Array<IngredientPrototype>;
 }
 

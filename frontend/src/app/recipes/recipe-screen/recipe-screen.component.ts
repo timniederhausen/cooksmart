@@ -15,7 +15,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 
-import { PageRecipe, Recipe, RecipeService } from '../../data';
+import { SimplePageRecipe, Recipe, RecipeService } from '../../data';
 import { PageableEntityService } from '../../core/pageable-entity.service';
 import { StatefulRecipe } from '../recipe-item/recipe-item.component';
 
@@ -28,7 +28,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   recipePageService: PageableEntityService<Recipe, string>;
 
   recipesList$: Observable<StatefulRecipe[]>;
-  recipes: PageRecipe;
+  recipes: SimplePageRecipe;
 
   private searchTerms$ = new Subject<string>();
 
@@ -62,7 +62,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     const recipePage$ = this.recipePageService.entities$.pipe(
       catchError((err) => {
         console.log(err);
-        return of({ first: true, content: [] } as PageRecipe);
+        return of({ first: true, content: [] } as SimplePageRecipe);
       }),
     );
     this.recipesList$ = recipePage$.pipe(
@@ -84,6 +84,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
 
   addNew() {
     this.newRecipe = {
+      id: undefined,
       description: '',
       image: '',
       ingredients: [],

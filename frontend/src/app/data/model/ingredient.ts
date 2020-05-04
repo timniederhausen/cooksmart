@@ -14,10 +14,10 @@ import { IngredientPrototype } from './ingredient-prototype';
 
 
 export interface Ingredient { 
-    id?: number;
+    id: number;
     prototype?: IngredientPrototype;
     quantity: number;
-    unit?: string;
+    unit: string;
     recipe?: Recipe;
 }
 

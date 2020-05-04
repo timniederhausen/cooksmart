@@ -13,11 +13,11 @@ import { Ingredient } from './ingredient';
 
 
 export interface Recipe { 
-    id?: number;
+    id: number;
     name: string;
-    description?: string;
-    image?: string;
+    description: string;
+    image: string;
     rating: number;
-    ingredients?: Array<Ingredient>;
+    ingredients: Array<Ingredient>;
 }
 

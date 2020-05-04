@@ -12,9 +12,9 @@
 
 
 export interface IngredientPrototype { 
-    id?: number;
+    id: number;
     name: string;
-    description?: string;
-    image?: string;
+    description: string;
+    image: string;
 }
 

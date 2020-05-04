@@ -17,8 +17,8 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { PageRecipe } from '../model/models';
 import { Recipe } from '../model/models';
+import { SimplePageRecipe } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -240,9 +240,9 @@ export class RecipeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PageRecipe>;
-    public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PageRecipe>>;
-    public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PageRecipe>>;
+    public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<SimplePageRecipe>;
+    public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<SimplePageRecipe>>;
+    public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<SimplePageRecipe>>;
     public listRecipes(query?: string, page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -285,7 +285,7 @@ export class RecipeService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<PageRecipe>(`${this.configuration.basePath}/api/recipe/v1/recipes`,
+        return this.httpClient.get<SimplePageRecipe>(`${this.configuration.basePath}/api/recipe/v1/recipes`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

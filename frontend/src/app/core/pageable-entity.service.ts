@@ -14,7 +14,7 @@
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 
-import { Pageable, Sort } from '../data';
+import { SimplePageable } from '../data';
 
 // This matches the definition of Spring's Page interface.
 interface Page<T> {
@@ -22,18 +22,15 @@ interface Page<T> {
   totalPages?: number;
   size?: number;
   content?: Array<T>;
-  number?: number;
-  sort?: Sort;
-  numberOfElements?: number;
   first?: boolean;
-  pageable?: Pageable;
   last?: boolean;
+  pageable?: SimplePageable;
   empty?: boolean;
 }
 
 interface State<Q, T> {
   query?: Q;
-  pageable?: Pageable;
+  pageable?: SimplePageable;
 }
 
 export class PageableEntityService<T, Q> {
@@ -85,6 +82,7 @@ export class PageableEntityService<T, Q> {
     } else {
       this._all = {
         ...result,
+        size: this._all.size + result.size,
         content: [...this._all.content, ...result.content],
       };
     }

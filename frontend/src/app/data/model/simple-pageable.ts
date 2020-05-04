@@ -11,9 +11,9 @@
  */
 
 
-export interface Sort { 
-    sorted?: boolean;
-    unsorted?: boolean;
-    empty?: boolean;
+export interface SimplePageable { 
+    page: number;
+    size: number;
+    sort: Array<string>;
 }
 

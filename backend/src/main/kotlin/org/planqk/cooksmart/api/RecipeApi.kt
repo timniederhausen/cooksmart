@@ -20,8 +20,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.planqk.cooksmart.model.Recipe
+import org.planqk.cooksmart.util.SimplePage
 import org.springdoc.data.rest.converters.PageableAsQueryParam
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -71,7 +71,7 @@ interface RecipeApi {
                     @RequestParam("query")
                     query: String?,
                     @Parameter(hidden = true)
-                    pageable: Pageable): ResponseEntity<Page<Recipe>>
+                    pageable: Pageable): ResponseEntity<SimplePage<Recipe>>
 
     @Operation(summary = "Add a new ingredient prototype")
     @ApiResponses(value = [

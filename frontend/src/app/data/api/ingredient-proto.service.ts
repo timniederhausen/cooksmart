@@ -18,7 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { IngredientPrototype } from '../model/models';
-import { PageIngredientPrototype } from '../model/models';
+import { SimplePageIngredientPrototype } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -240,9 +240,9 @@ export class IngredientProtoService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<PageIngredientPrototype>;
-    public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<PageIngredientPrototype>>;
-    public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<PageIngredientPrototype>>;
+    public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<SimplePageIngredientPrototype>;
+    public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<SimplePageIngredientPrototype>>;
+    public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<SimplePageIngredientPrototype>>;
     public listIngredients(query?: string, page?: number, size?: number, sort?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -285,7 +285,7 @@ export class IngredientProtoService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<PageIngredientPrototype>(`${this.configuration.basePath}/api/ingredient-proto/v1/`,
+        return this.httpClient.get<SimplePageIngredientPrototype>(`${this.configuration.basePath}/api/ingredient-proto/v1/`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
