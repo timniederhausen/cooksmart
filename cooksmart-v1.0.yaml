@@ -89,14 +89,14 @@ paths:
               $ref: '#/components/schemas/Ingredient'
         required: true
       responses:
-        "400":
-          description: Invalid ingredient data supplied
         "201":
           description: Add succeeded
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/Ingredient'
+        "400":
+          description: Invalid ingredient data supplied
   /api/ingredient-proto/v1/{id}:
     get:
       tags:
@@ -185,6 +185,33 @@ paths:
       - ingredient-proto
       summary: Get a list of all ingredient prototypes
       operationId: listIngredients
+      parameters:
+      - name: query
+        in: query
+        description: Filter for the recipe name
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Zero-based page index (0..N)
+        schema:
+          type: integer
+          default: "0"
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        schema:
+          type: integer
+          default: "20"
+      - name: sort
+        in: query
+        description: 'Sorting criteria in the format: property(,asc|desc). Default
+          sort order is ascending. Multiple sort criteria are supported.'
+        schema:
+          type: array
+          items:
+            type: string
       responses:
         "204":
           description: There are no ingredient prototypes
@@ -193,9 +220,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IngredientPrototype'
+                $ref: '#/components/schemas/PageIngredientPrototype'
     post:
       tags:
       - ingredient-proto
@@ -209,14 +234,14 @@ paths:
               $ref: '#/components/schemas/IngredientPrototype'
         required: true
       responses:
-        "400":
-          description: Invalid ingredient data supplied
         "201":
           description: Add succeeded
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/IngredientPrototype'
+        "400":
+          description: Invalid ingredient data supplied
   /api/recipe/v1/recipe/{id}:
     get:
       tags:
@@ -382,8 +407,6 @@ paths:
             type: integer
             format: int64
       responses:
-        "400":
-          description: Invalid recipe ID supplied
         "200":
           description: Ingredient shopping list for given recipes
           content:
@@ -392,10 +415,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Ingredient'
+        "400":
+          description: Invalid recipe ID supplied
 components:
   schemas:
-    Unit:
-      type: object
     Ingredient:
       required:
       - quantity
@@ -449,7 +472,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Ingredient'
-    PageRecipe:
+    Unit:
+      type: object
+    PageIngredientPrototype:
       type: object
       properties:
         totalElements:
@@ -458,27 +483,27 @@ components:
         totalPages:
           type: integer
           format: int32
-        numberOfElements:
-          type: integer
-          format: int32
-        first:
-          type: boolean
-        last:
-          type: boolean
-        pageable:
-          $ref: '#/components/schemas/Pageable'
-        number:
-          type: integer
-          format: int32
         size:
           type: integer
           format: int32
         content:
           type: array
           items:
-            $ref: '#/components/schemas/Recipe'
+            $ref: '#/components/schemas/IngredientPrototype'
+        number:
+          type: integer
+          format: int32
         sort:
           $ref: '#/components/schemas/Sort'
+        numberOfElements:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        last:
+          type: boolean
         empty:
           type: boolean
     Pageable:
@@ -502,6 +527,38 @@ components:
         sorted:
           type: boolean
         unsorted:
+          type: boolean
+        empty:
+          type: boolean
+    PageRecipe:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recipe'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        numberOfElements:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        last:
           type: boolean
         empty:
           type: boolean

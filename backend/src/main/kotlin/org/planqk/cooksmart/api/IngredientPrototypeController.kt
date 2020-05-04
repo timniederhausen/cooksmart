@@ -15,6 +15,8 @@ package org.planqk.cooksmart.api
 
 import org.planqk.cooksmart.model.IngredientPrototype
 import org.planqk.cooksmart.repository.IngredientPrototypeRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -43,8 +45,12 @@ class IngredientPrototypeController(private val ingredientPrototypes: Ingredient
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun listIngredients(): ResponseEntity<List<IngredientPrototype>> {
-        return ResponseEntity(ingredientPrototypes.findAll(), HttpStatus.OK)
+    override fun listIngredients(query: String?,
+                                 pageable: Pageable): ResponseEntity<Page<IngredientPrototype>> {
+        if (query == null || query.isEmpty())
+            return ResponseEntity(ingredientPrototypes.findAll(pageable), HttpStatus.OK)
+        return ResponseEntity(ingredientPrototypes.findDistinctIngredientProrotypeByNameContaining(
+                query, pageable), HttpStatus.OK)
     }
 
     override fun addIngredient(ingredientPrototype: IngredientPrototype): ResponseEntity<IngredientPrototype> {

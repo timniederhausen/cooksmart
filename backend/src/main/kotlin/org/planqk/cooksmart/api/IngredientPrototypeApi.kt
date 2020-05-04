@@ -20,6 +20,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.planqk.cooksmart.model.IngredientPrototype
+import org.springdoc.data.rest.converters.PageableAsQueryParam
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -63,7 +66,12 @@ interface IngredientPrototypeApi {
                 content = [Content()])
     ])
     @GetMapping(value = ["/"], produces = ["application/json"])
-    fun listIngredients(): ResponseEntity<List<IngredientPrototype>>
+    @PageableAsQueryParam
+    fun listIngredients(@Parameter(description = "Filter for the recipe name", required = false)
+                        @RequestParam("query")
+                        query: String?,
+                        @Parameter(hidden = true)
+                        pageable: Pageable): ResponseEntity<Page<IngredientPrototype>>
 
     @Operation(summary = "Add a new ingredient prototype")
     @ApiResponses(value = [

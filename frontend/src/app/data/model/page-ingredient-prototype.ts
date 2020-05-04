@@ -10,15 +10,15 @@
  * Do not edit the class manually.
  */
 import { Pageable } from './pageable';
-import { Recipe } from './recipe';
+import { IngredientPrototype } from './ingredient-prototype';
 import { Sort } from './sort';
 
 
-export interface PageRecipe { 
+export interface PageIngredientPrototype { 
     totalElements?: number;
     totalPages?: number;
     size?: number;
-    content?: Array<Recipe>;
+    content?: Array<IngredientPrototype>;
     number?: number;
     sort?: Sort;
     numberOfElements?: number;
