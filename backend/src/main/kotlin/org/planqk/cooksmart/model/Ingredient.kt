@@ -16,6 +16,7 @@ package org.planqk.cooksmart.model
 import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 @Entity
 data class Ingredient(
@@ -28,7 +29,7 @@ data class Ingredient(
         val prototype: IngredientPrototype,
 
         @JsonProperty
-        @get: NotBlank
+        @get: NotNull
         val quantity: Int = 0,
 
         @JsonProperty
