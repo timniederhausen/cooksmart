@@ -113,12 +113,11 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         id="typeahead-focus"
         type="text"
         class="form-control"
-        [resultFormatter]="this.ingredientSearchFormatter"
+        [resultFormatter]="ingredientSearchFormatter"
         [ngbTypeahead]="ingredientSearch"
         placeholder="Search for Ingredients"
         (selectItem)="selectedIngredient($event)"
-        (focus)="focus$.next($any($event).target.value)"
-        (click)="click$.next($any($event).target.value)"
+        (focus)="ingredientSearch($any($event).target.value)"
         #instance="ngbTypeahead"
       />
       <button type="button" (click)="addingNewIngredients = !addingNewIngredients" class="btn btn-sm"><i
