@@ -18,52 +18,14 @@ import { Ingredient } from '../../data';
 @Component({
   selector: 'app-shopping-list-screen',
   templateUrl: './shopping-list-screen.component.html',
-  styleUrls: ['./shopping-list-screen.component.scss']
+  styleUrls: ['./shopping-list-screen.component.scss'],
 })
 export class ShoppingListScreenComponent implements OnInit {
-
-  private recipeList: Recipe[] = [{
-    name: 'blah', rating: 33, image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg", id:0,
-    ingredients: [{
-      unit: "kg", quantity: 3, id: 312,
-      prototype: {
-        name: "Fries", description: "LOOOONG PLACEHOLDER", id: 0,
-        image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"
-      }
-    },
-      {
-        unit: "kg", quantity: 3, id: 1,
-        prototype: {
-          name: "Fries", description: "LOOOONG PLACEHOLDER", id: 0,
-          image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"
-        }
-      }]
-  },
-    {
-      name: 'bluh', rating: 33333, image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg", id:5,
-      ingredients: [{
-        unit: "kg", quantity: 3, id: 2,
-        prototype: {
-          name: "Fries", description: "LOOOONG PLACEHOLDER", id: 0,
-          image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"
-        }
-      }]
-    },
-    {
-      name: 'blabb', rating: 33333, image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg", id:10,
-      ingredients: [{
-        unit: "kg", quantity: 3, id: 0,
-        prototype: {
-          name: "Fries", description: "LOOOONG PLACEHOLDER", id: 0,
-          image: "https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg"
-        }
-      }]
-    }
-  ];
-  private ingredientList: Ingredient[] = [];
+  recipeList: Recipe[] = [];
+  ingredientList: Ingredient[] = [];
 
   ngOnInit(): void {
-    for(let recipe of this.recipeList) {
+    for (let recipe of this.recipeList) {
       this.addRecipe(recipe);
     }
   }
@@ -72,14 +34,11 @@ export class ShoppingListScreenComponent implements OnInit {
     for (let ingredient of recipe.ingredients) {
       this.ingredientList.push(ingredient);
     }
-
   }
 
   removeRecipe(id: number) {
-    this.recipeList = this.recipeList.filter(ing => ing.id !== id);
+    this.recipeList = this.recipeList.filter((ing) => ing.id !== id);
   }
 
-  search(value: string) {
-    
-  }
+  search(value: string) {}
 }

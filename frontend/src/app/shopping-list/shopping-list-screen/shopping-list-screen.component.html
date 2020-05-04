@@ -15,16 +15,26 @@ Copyright 2020 Felix Burk, Tim Niederhausen
 -->
 <div class="container p-2">
   <div class="pill-container">
-    <span *ngFor="let recipe of this.recipeList" class="pill-content badge badge-pill badge-secondary m-1">
+    <span
+      *ngFor="let recipe of this.recipeList"
+      class="pill-content badge badge-pill badge-secondary m-1"
+    >
       <div class="pill-container-items pl-2">
-              {{recipe.name}}
+        {{ recipe.name }}
       </div>
-      <button type="button" (click)="removeRecipe(recipe.id)" class="pill-container-items invisible-button pr-2">
+      <button
+        type="button"
+        (click)="removeRecipe(recipe.id)"
+        class="pill-container-items invisible-button pr-2"
+      >
         <i class="material-icons white-image md-10">clear</i>
       </button>
     </span>
   </div>
-  <form class="form-inline justify-content-center parent pb-2 m-1" (submit)="$event.preventDefault()">
+  <form
+    class="form-inline justify-content-center parent pb-2 m-1"
+    (submit)="$event.preventDefault()"
+  >
     <input
       #searchInput
       class="form-control search-element wide"
@@ -39,12 +49,12 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <div class="m-2" *ngFor="let ingredient of this.ingredientList">
     <div class="horizontal-item-container">
       <div class="item-container-left">
-        <button type="button" class="btn btn-sm"><i class="material-icons">check_box_outline_blank</i></button>
+        <button type="button" class="btn btn-sm">
+          <i class="material-icons">check_box_outline_blank</i>
+        </button>
+        <div class="p-2">{{ ingredient.quantity }} {{ ingredient.unit }}</div>
         <div class="p-2">
-          {{ingredient.quantity}} {{ingredient.unit}}
-        </div>
-        <div class="p-2">
-          {{ingredient.prototype.name}}
+          {{ ingredient.prototype.name }}
         </div>
       </div>
     </div>

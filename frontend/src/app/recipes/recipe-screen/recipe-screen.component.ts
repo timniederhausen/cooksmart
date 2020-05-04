@@ -28,7 +28,6 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   recipePageService: PageableEntityService<Recipe, string>;
 
   recipesList$: Observable<StatefulRecipe[]>;
-  recipes: SimplePageRecipe;
 
   private searchTerms$ = new Subject<string>();
 

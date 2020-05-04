@@ -11,86 +11,53 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import {
-  Ingredient, IngredientProtoService, IngredientPrototype, IngredientService, Pageable, PageIngredientPrototype,
-  PageRecipe,
-  Recipe
-} from '../../data';
-import { SmartListComponent } from '../../smart-list/smart-list.component';
-import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { IngredientProtoService, IngredientPrototype } from '../../data';
+import { PageableEntityService } from '../../core/pageable-entity.service';
 
 @Component({
   selector: 'app-ingredient-screen',
   templateUrl: './ingredient-screen.component.html',
-  styleUrls: ['./ingredient-screen.component.scss']
+  styleUrls: ['./ingredient-screen.component.scss'],
 })
-export class IngredientScreenComponent implements OnInit, AfterViewInit {
-  ingredients$: Observable<PageIngredientPrototype>;
+export class IngredientScreenComponent implements OnInit {
+  ingredientPageService: PageableEntityService<IngredientPrototype, string>;
   ingredientsList$: Observable<IngredientPrototype[]>;
-  ingredients: PageIngredientPrototype;
 
   private searchTerms$ = new Subject<string>();
-  private pageWanted$ = new Subject<Pageable>();
 
   newIngredient?: IngredientPrototype;
 
-  constructor(private readonly ingredientProtoService: IngredientProtoService) {
+  constructor(private ingredientProtoService: IngredientProtoService) {
+    this.ingredientPageService = new PageableEntityService<
+      IngredientPrototype,
+      string
+    >((state) => {
+      console.log(state);
+      return this.ingredientProtoService.listIngredients(
+        state.query ? state.query : undefined,
+        state.pageable?.page,
+        state.pageable?.size,
+        state.pageable?.sort,
+      );
+    });
   }
 
   ngOnInit() {
-    this.ingredients$ = combineLatest([
-      this.pageWanted$,
-      this.searchTerms$.pipe(
-        // wait 300ms after each keystroke before considering the term
-        debounceTime(300),
-
-        // ignore new term if same as previous term
-        distinctUntilChanged(),
-      ),
-    ])
-      .pipe(
-        // switch to new search observable each time the term / page changes
-        switchMap(([pageable, term]) => {
-          if (!pageable) return this.ingredientProtoService.listIngredients(term);
-          return this.ingredientProtoService.listIngredients(
-            term,
-            pageable.page,
-            pageable.size,
-            pageable.sort,
-          );
-        }),
-
-        catchError((err) => {
-          console.log(err);
-          return of({ first: true, content: [] } as PageRecipe);
-        }),
-      )
-      .pipe(
-        tap((ingredients) => {
-          if (ingredients.first) this.ingredients = ingredients;
-          else
-            this.ingredients = {
-              ...ingredients,
-              content: this.ingredients.content.concat(ingredients.content),
-            };
-        }),
-      );
-    this.ingredientsList$ = this.ingredients$.pipe(map((pr) => pr.content ?? []));
+    this.ingredientsList$ = this.ingredientPageService.entities$.pipe(
+      map((pr) => pr.content ?? []),
+    );
   }
 
   ngAfterViewInit() {
-    this.pageWanted$.next({});
     this.searchTerms$.next('');
   }
 
   loadMore() {
-    if (!this.ingredients.pageable || this.ingredients.last) return;
-    this.pageWanted$.next({
-      ...this.ingredients.pageable,
-      page: this.ingredients.pageable.page + 1,
-    });
+    this.ingredientPageService.loadMore();
   }
 
   search(term: string): void {
@@ -99,6 +66,7 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
 
   addNew() {
     this.newIngredient = {
+      id: undefined,
       description: '',
       image: '',
       name: '',
@@ -108,18 +76,19 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
   saveIngredient(ingredientProto: IngredientPrototype) {
     console.log(ingredientProto);
     if (ingredientProto.id) {
-      this.ingredientProtoService.updateIngredient1(ingredientProto.id, ingredientProto).subscribe(
-        () => {
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+      this.ingredientProtoService
+        .updateIngredient1(ingredientProto.id, ingredientProto)
+        .subscribe(
+          () => {},
+          (error) => {
+            console.log(error);
+          },
+        );
       return;
     }
     this.ingredientProtoService.addIngredient1(ingredientProto).subscribe(
       (addedRecipe) => {
-        this.ingredients.content = [addedRecipe, ...this.ingredients.content];
+        this.ingredientPageService.reload();
         this.newIngredient = undefined;
       },
       (error) => {
