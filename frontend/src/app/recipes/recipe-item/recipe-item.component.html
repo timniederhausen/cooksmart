@@ -15,7 +15,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
 -->
 <ng-container>
   <div *ngIf="!editing" class="row">
-    <div class="col">
+    <div class="col" style="min-height:200px;">
       <div class="horizontal-item-container item-container-all-start">
         <h1>{{ recipe.name }}</h1>
         <button type="button" (click)="startEditing()" class="btn btn-sm">
@@ -34,7 +34,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     <div class="col col-6">
       <img
         style="width: 100%; height: 100%;"
-        [src]="[recipe.image]"
+        [src]="[recipe.image || this.env.default_image]"
         alt="recipe image"
       />
     </div>

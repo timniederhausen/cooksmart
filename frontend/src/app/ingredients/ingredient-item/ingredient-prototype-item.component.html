@@ -28,8 +28,9 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     </div>
     <div class="col col-6">
       <img
+        onError="this.src='https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg'"
         style="width: 100%; height: 100%;"
-        [src]="[ingredient.image]"
+        [src]="[ingredient.image || this.env.default_image]"
         alt="recipe image"
       />
     </div>

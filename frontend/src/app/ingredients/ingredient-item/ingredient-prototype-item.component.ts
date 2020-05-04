@@ -13,6 +13,7 @@
 // limitations under the License.
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IngredientPrototype, Recipe } from '../../data';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-ingredient-item',
@@ -31,6 +32,8 @@ export class IngredientPrototypeItemComponent implements OnInit {
 
   @Output()
   save = new EventEmitter<IngredientPrototype>();
+
+  env = environment;
 
   ngOnInit() {
   }

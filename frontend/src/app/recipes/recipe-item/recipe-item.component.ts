@@ -38,6 +38,7 @@ import {
   NgbTypeahead,
   NgbTypeaheadSelectItemEvent,
 } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../../environments/environment';
 
 export interface StatefulRecipe extends Recipe {
   removedIngredients?: Ingredient[];
@@ -65,6 +66,8 @@ export class RecipeItemComponent implements OnInit {
   save = new EventEmitter<Recipe>();
 
   refresh$ = new BehaviorSubject<void>(undefined);
+
+  env = environment;
 
   constructor(
     private readonly ingredientProtoService: IngredientProtoService,
