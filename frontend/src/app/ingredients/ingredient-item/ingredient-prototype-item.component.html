@@ -17,38 +17,76 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <div *ngIf="!editing" class="row">
     <div class="col">
       <div class="horizontal-item-container item-container-all-start">
-        <h1>{{ingredient.name}}</h1>
-        <button type="button" (click)="toggleEdit()" class="btn btn-sm"><i class="material-icons">edit</i></button>
+        <h1>{{ ingredient.name }}</h1>
+        <button type="button" (click)="startEditing()" class="btn btn-sm">
+          <i class="material-icons">edit</i>
+        </button>
       </div>
       <div>
-        {{ingredient.description}}
+        {{ ingredient.description }}
       </div>
     </div>
     <div class="col col-6">
-      <img style="width: 100%; height: 100%"
-           [src]=[ingredient.image]
-           alt="recipe image">
+      <img
+        style="width: 100%; height: 100%;"
+        [src]="[ingredient.image]"
+        alt="recipe image"
+      />
     </div>
   </div>
-  <form *ngIf="editing" class="p-2">
+  <form
+    (ngSubmit)="onSubmit()"
+    #ingredientForm="ngForm"
+    *ngIf="editing"
+    class="p-2"
+  >
     <div class="form-group">
       <label for="editName">Name</label>
-      <input type="text" class="form-control" id="editName" aria-describedby="edit name"
-             placeholder={{recipe.name}}>
+      <input
+        type="text"
+        class="form-control"
+        id="editName"
+        name="name"
+        aria-describedby="edit name"
+        [(ngModel)]="ingredient.name"
+      />
     </div>
     <div class="form-group">
       <label for="editDescription">Description</label>
-      <textarea class="form-control" id="editDescription" rows="3" placeholder={{recipe.description}}></textarea>
+      <textarea
+        class="form-control"
+        id="editDescription"
+        name="description"
+        rows="3"
+        [(ngModel)]="ingredient.description"
+      ></textarea>
     </div>
     <div class="form-group">
       <label for="editImageSrc">Image Source</label>
-      <input type="text" class="form-control" id="editImageSrc" aria-describedby="edit name"
-             placeholder={{recipe.image}}>
+      <input
+        type="text"
+        class="form-control"
+        id="editImageSrc"
+        name="image"
+        aria-describedby="edit name"
+        [(ngModel)]="ingredient.image"
+      />
     </div>
     <div>
-      <button type="submit" (click)="saveEdit()" class="btn btn-sm btn-primary mr-2">Submit</button>
-      <button type="submit" (click)="toggleEdit()" class="btn btn-sm btn-secondary mr-2">Cancel</button>
+      <button
+        type="submit"
+        [disabled]="!ingredientForm.form.valid"
+        class="btn btn-sm btn-primary mr-2"
+      >
+        Submit
+      </button>
+      <button
+        type="submit"
+        (click)="cancelEditing()"
+        class="btn btn-sm btn-secondary mr-2"
+      >
+        Cancel
+      </button>
     </div>
-
   </form>
 </ng-container>

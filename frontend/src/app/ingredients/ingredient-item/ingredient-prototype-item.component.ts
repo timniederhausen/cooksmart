@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, Input, OnInit } from '@angular/core';
-import { IngredientPrototype } from '../../data';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IngredientPrototype, Recipe } from '../../data';
 
 @Component({
   selector: 'app-ingredient-item',
@@ -23,21 +23,30 @@ export class IngredientPrototypeItemComponent implements OnInit {
   @Input()
   ingredient: IngredientPrototype = undefined;
 
+  @Input()
   editing: boolean = false;
+
+  @Output()
+  cancelEdit = new EventEmitter();
+
+  @Output()
+  save = new EventEmitter<IngredientPrototype>();
 
   ngOnInit() {
   }
 
-  toggleEdit() {
-    this.editing = !this.editing;
+  startEditing() {
+    this.editing = true;
   }
 
-  saveEdit() {
-    //TODO
+  cancelEditing() {
+    this.cancelEdit.emit();
+    this.editing = false;
   }
 
-  changeRate() {
-    //TODO
+  onSubmit() {
+    this.save.emit(this.ingredient);
+    this.editing = false;
   }
 
 }

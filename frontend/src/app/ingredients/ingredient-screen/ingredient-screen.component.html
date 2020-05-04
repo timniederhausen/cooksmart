@@ -14,7 +14,10 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  limitations under the License.
 -->
 <div class="container p-2">
-  <form class="form-inline justify-content-center parent pb-2" (submit)="$event.preventDefault()">
+  <form
+    class="form-inline justify-content-center parent pb-2"
+    (submit)="$event.preventDefault()"
+  >
     <input
       #searchInput
       class="form-control search-element wide"
@@ -25,7 +28,14 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     />
   </form>
   <div class="container p-0">
-    <app-smart-list #ingredientList [items]="ingredients$">
+    <div class="form-inline justify-content-between pb-2">
+      <button class="btn btn-primary" (click)="addNew()">Add new</button>
+      <div class="form-group">
+        <label for="sortBy" class="pr-2">Sort by:</label>
+        <select class="form-control" id="sortBy"> </select>
+      </div>
+    </div>
+    <app-smart-list #ingredientList [items]="ingredientsList$">
       <ng-container *header="let item">
         <button
           class="btn horizontal-item-container"
@@ -36,13 +46,25 @@ Copyright 2020 Felix Burk, Tim Niederhausen
             {{ item.name }}
           </div>
           <div class="item-container-right">
-            <button type="button" class="btn btn-sm"><i class="material-icons">clear</i></button>
+            <button type="button" class="btn btn-sm">
+              <i class="material-icons">clear</i>
+            </button>
           </div>
         </button>
       </ng-container>
       <ng-container *content="let item">
-        <app-ingredient-item [ingredient]="item"></app-ingredient-item>
+        <app-ingredient-item
+          (save)="saveIngredient($event)"
+          [ingredient]="item"
+        ></app-ingredient-item>
       </ng-container>
     </app-smart-list>
+    <app-ingredient-item
+      *ngIf="newIngredient"
+      [ingredient]="newIngredient"
+      [editing]="true"
+      (cancelEdit)="newIngredient = undefined"
+      (save)="saveIngredient($event)"
+    ></app-ingredient-item>
   </div>
 </div>

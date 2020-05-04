@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import { Component, OnInit } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
-import { Ingredient, IngredientProtoService, IngredientPrototype, IngredientService, Recipe } from '../../data';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
+import {
+  Ingredient, IngredientProtoService, IngredientPrototype, IngredientService, Pageable, PageIngredientPrototype,
+  PageRecipe,
+  Recipe
+} from '../../data';
 import { SmartListComponent } from '../../smart-list/smart-list.component';
+import { catchError, debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ingredient-screen',
@@ -22,22 +27,104 @@ import { SmartListComponent } from '../../smart-list/smart-list.component';
   styleUrls: ['./ingredient-screen.component.scss']
 })
 export class IngredientScreenComponent implements OnInit {
-  ingredients$: Observable<IngredientPrototype[]> = of(
-    [
-      {image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",id:0,description:"looooong placeholder", name:"pizza"},
-      {image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",id:0,description:"looooong placeholder", name:"pizza2"},
-      {image:"https://www.jessicagavin.com/wp-content/uploads/2019/02/carrots-7-1200.jpg",id:0,description:"looooong placeholder", name:"pizza3"},
-    ]);
-  private searchTerms = new Subject<string>();
+  ingredients$: Observable<PageIngredientPrototype>;
+  ingredientsList$: Observable<IngredientPrototype[]>;
+  ingredients: PageIngredientPrototype;
 
-  ingredientList: SmartListComponent<IngredientPrototype>;
+  private searchTerms$ = new Subject<string>();
+  private pageWanted$ = new Subject<Pageable>();
 
-  constructor(private ingredientProtoService: IngredientProtoService) {}
+  newIngredient?: IngredientPrototype;
+
+  constructor(private ingredientProtoService: IngredientProtoService) {
+  }
 
   ngOnInit() {
+    this.ingredients$ = combineLatest([
+      this.pageWanted$,
+      this.searchTerms$.pipe(
+        // wait 300ms after each keystroke before considering the term
+        debounceTime(300),
+
+        // ignore new term if same as previous term
+        distinctUntilChanged(),
+      ),
+    ])
+      .pipe(
+        // switch to new search observable each time the term / page changes
+        switchMap(([pageable, term]) => {
+          if (!pageable) return this.ingredientProtoService.listIngredients(term);
+          return this.ingredientProtoService.listIngredients(
+            term,
+            pageable.page,
+            pageable.size,
+            pageable.sort,
+          );
+        }),
+
+        catchError((err) => {
+          console.log(err);
+          return of({ first: true, content: [] } as PageRecipe);
+        }),
+      )
+      .pipe(
+        tap((ingredients) => {
+          if (ingredients.first) this.ingredients = ingredients;
+          else
+            this.ingredients = {
+              ...ingredients,
+              content: this.ingredients.content.concat(ingredients.content),
+            };
+        }),
+      );
+    this.ingredientsList$ = this.ingredients$.pipe(map((pr) => pr.content ?? []));
+  }
+
+  ngAfterViewInit() {
+    this.pageWanted$.next({});
+    this.searchTerms$.next('');
+  }
+
+  loadMore() {
+    if (!this.ingredients.pageable || this.ingredients.last) return;
+    this.pageWanted$.next({
+      ...this.ingredients.pageable,
+      page: this.ingredients.pageable.page + 1,
+    });
   }
 
   search(term: string): void {
-    this.searchTerms.next(term);
+    this.searchTerms$.next(term);
+  }
+
+  addNew() {
+    this.newIngredient = {
+      description: '',
+      image: '',
+      name: '',
+    };
+  }
+
+  saveIngredient(ingredientProto: IngredientPrototype) {
+    console.log(ingredientProto);
+    if (ingredientProto.id) {
+      this.ingredientProtoService.updateIngredient1(ingredientProto.id, ingredientProto).subscribe(
+        () => {
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
+      return;
+    }
+    this.ingredientProtoService.addIngredient1(ingredientProto).subscribe(
+      (addedRecipe) => {
+        this.ingredients.content = [addedRecipe, ...this.ingredients.content];
+        this.newIngredient = undefined;
+      },
+      (error) => {
+        console.log(error);
+      },
+    );
   }
 }
