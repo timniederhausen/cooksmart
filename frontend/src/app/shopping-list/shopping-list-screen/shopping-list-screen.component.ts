@@ -11,13 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IngredientPrototype, Recipe, RecipeService, ShoppingListService } from '../../data';
+import { Component, OnInit } from '@angular/core';
+import { merge, Observable, Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  switchMap,
+} from 'rxjs/operators';
+
+import { Recipe, RecipeService, ShoppingListService } from '../../data';
 import { Ingredient } from '../../data';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { NgbTypeahead, NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
-import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-list-screen',
@@ -28,29 +32,30 @@ export class ShoppingListScreenComponent implements OnInit {
   recipeList: Recipe[] = [];
   ingredientList: Ingredient[] = [];
 
-  refresh$ = new BehaviorSubject<void>(undefined);
+  searchTerm$ = new Subject<string>();
 
-  @ViewChild('instance', { static: true }) instance: NgbTypeahead;
+  constructor(
+    private readonly shoppingListService: ShoppingListService,
+    private readonly recipeService: RecipeService,
+  ) {}
 
-  constructor(private readonly shoppingListService: ShoppingListService,
-              private readonly recipeService: RecipeService) {
-  }
-
-  ngOnInit(): void {
+  ngOnInit() {
     for (let recipe of this.recipeList) {
       this.addRecipe(recipe);
     }
   }
 
   refreshList() {
-    this.shoppingListService.compileForRecipes(this.recipeList.map(a => a.id)).subscribe(
-      (res) => {
-        this.ingredientList = res;
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    this.shoppingListService
+      .compileForRecipes(this.recipeList.map((a) => a.id))
+      .subscribe(
+        (res) => {
+          this.ingredientList = res;
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
   }
 
   addRecipe(recipe: Recipe) {
@@ -63,29 +68,21 @@ export class ShoppingListScreenComponent implements OnInit {
     this.refreshList();
   }
 
+  isNewRecipe = (newRecipe: Recipe) =>
+    !this.recipeList.find((r) => r.id === newRecipe.id);
+
   recipeSearchFormatter = (result: Recipe) => result.name;
-  test = "";
 
   recipeSearch = (text$: Observable<string>) => {
-    return combineLatest([text$, this.refresh$]).pipe(
+    return merge(text$, this.searchTerm$).pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(([term]) =>
-        this.recipeService
-          .listRecipes(term).pipe(map(p => p.content)),
+      switchMap((term) =>
+        this.recipeService.listRecipes(term).pipe(
+          map((p) => p.content ?? []),
+          map((list) => list.filter((r) => this.isNewRecipe(r))),
+        ),
       ),
     );
   };
-
-  selectedRecipe($event: NgbTypeaheadSelectItemEvent) {
-    this.addRecipe($event.item);
-  }
-
-  public onFocus(e: Event): void {
-    e.stopPropagation();
-    setTimeout(() => {
-      const inputEvent: Event = new Event('input');
-      e.target.dispatchEvent(inputEvent);
-    }, 0);
-  }
 }
