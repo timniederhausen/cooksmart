@@ -49,6 +49,6 @@ data class Recipe(
         @get: NotNull
         val rating: Int = -1,
 
-        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "recipe")
+        @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "recipe")
         val ingredients: List<Ingredient> = emptyList()
 )
