@@ -19,6 +19,17 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity
+@NamedEntityGraphs(
+        NamedEntityGraph(name = "RecipeRecursive",
+                attributeNodes = [NamedAttributeNode(value = "ingredients", subgraph = "IngredientWithProto")],
+                subgraphs = [
+                        NamedSubgraph(
+                                name = "IngredientWithProto",
+                                attributeNodes = [NamedAttributeNode("prototype")]
+                        )
+                ]
+        )
+)
 data class Recipe(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         @JsonProperty
@@ -38,6 +49,6 @@ data class Recipe(
         @get: NotNull
         val rating: Int = -1,
 
-        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "prototype")
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "recipe")
         val ingredients: List<Ingredient> = emptyList()
 )

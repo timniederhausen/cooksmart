@@ -13,6 +13,7 @@
 // limitations under the License.
 package org.planqk.cooksmart.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -32,5 +33,9 @@ data class IngredientPrototype(
         val description: String = "",
 
         @JsonProperty
-        val image: String = ""
+        val image: String = "",
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "prototype")
+        @JsonIgnore
+        val ingredients: List<Ingredient>? = emptyList()
 )

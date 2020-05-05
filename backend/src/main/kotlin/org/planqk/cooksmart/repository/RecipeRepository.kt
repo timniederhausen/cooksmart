@@ -16,11 +16,18 @@ package org.planqk.cooksmart.repository
 import org.planqk.cooksmart.model.Recipe
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
 @Repository
 interface RecipeRepository : JpaRepository<Recipe, Long> {
-    fun findDistinctRecipesByNameContainingOrDescriptionContaining(
-            name: String?, desc: String?, pageable: Pageable): Page<Recipe>
+    @EntityGraph("RecipeRecursive")
+    @Query("SELECT r FROM Recipe r")
+    fun findAllDeep(pageable: Pageable): Page<Recipe>
+
+    @EntityGraph("RecipeRecursive")
+    @Query("SELECT r FROM Recipe r JOIN r.ingredients i JOIN i.prototype p WHERE lower(r.name) like lower(concat('%', ?1,'%'))")
+    fun findMatchingDeep(name: String?, pageable: Pageable): Page<Recipe>
 }

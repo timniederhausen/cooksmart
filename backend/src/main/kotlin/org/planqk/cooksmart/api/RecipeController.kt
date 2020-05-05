@@ -28,34 +28,34 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Validated
 @RequestMapping("\${api.base-path:}/recipe/v1")
-class RecipeController(private val recipes: RecipeRepository) : RecipeApi {
+class RecipeController(private val recipeRepository: RecipeRepository) : RecipeApi {
     override fun deleteRecipe(id: Long): ResponseEntity<Unit> {
-        recipes.deleteById(id)
+        recipeRepository.deleteById(id)
         return ResponseEntity(HttpStatus.OK)
     }
 
     override fun getRecipe(id: Long): ResponseEntity<Recipe> {
-        val instance = recipes.findByIdOrNull(id)
+        val instance = recipeRepository.findByIdOrNull(id)
         if (instance == null)
             return ResponseEntity(HttpStatus.NOT_FOUND)
         return ResponseEntity(instance, HttpStatus.OK)
     }
 
     override fun updateRecipe(id: Long, recipe: Recipe): ResponseEntity<Unit> {
-        recipes.save(recipe.copy(id = id))
+        recipeRepository.save(recipe.copy(id = id))
         return ResponseEntity(HttpStatus.OK)
     }
 
     override fun listRecipes(query: String?,
                              pageable: Pageable): ResponseEntity<SimplePage<Recipe>> {
-        if (query == null || query.isEmpty())
-            return ResponseEntity(of(recipes.findAll(pageable)), HttpStatus.OK)
+        val recipes = if (query == null || query.isEmpty())
+            recipeRepository.findAllDeep(pageable)
+        else recipeRepository.findMatchingDeep(query, pageable)
 
-        return ResponseEntity(of(recipes.findDistinctRecipesByNameContainingOrDescriptionContaining(
-                query, query, pageable)), HttpStatus.OK)
+        return ResponseEntity(of(recipes), HttpStatus.OK)
     }
 
     override fun addRecipe(recipe: Recipe): ResponseEntity<Recipe> {
-        return ResponseEntity(recipes.save(recipe.copy(id = 0)), HttpStatus.CREATED)
+        return ResponseEntity(recipeRepository.save(recipe.copy(id = 0)), HttpStatus.CREATED)
     }
 }
