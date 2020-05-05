@@ -13,7 +13,7 @@
 // limitations under the License.
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import { IngredientProtoService, IngredientPrototype } from '../../data';
 import { PageableEntityService } from '../../core/pageable-entity.service';
@@ -47,6 +47,16 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.searchTerms$
+      .pipe(
+        // ignore new term if same as previous term
+        distinctUntilChanged(),
+      )
+      .subscribe((term) => {
+        console.log('SEARCH ' + term);
+        this.ingredientPageService.state.query = term;
+        this.ingredientPageService.reload();
+      });
     this.ingredientsList$ = this.ingredientPageService.entities$.pipe(
       map((pr) => pr.content ?? []),
     );
