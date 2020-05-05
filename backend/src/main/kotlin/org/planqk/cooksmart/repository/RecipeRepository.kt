@@ -28,6 +28,6 @@ interface RecipeRepository : JpaRepository<Recipe, Long> {
     fun findAllDeep(pageable: Pageable): Page<Recipe>
 
     @EntityGraph("RecipeRecursive")
-    @Query("SELECT r FROM Recipe r JOIN r.ingredients i JOIN i.prototype p WHERE lower(r.name) like lower(concat('%', ?1,'%'))")
+    @Query("SELECT r FROM Recipe r WHERE lower(r.name) LIKE lower(concat('%', :name,'%'))")
     fun findMatchingDeep(name: String?, pageable: Pageable): Page<Recipe>
 }
