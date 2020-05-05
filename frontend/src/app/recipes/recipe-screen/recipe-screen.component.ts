@@ -109,9 +109,14 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         },
       );
       for (let ingredient of recipe.removedIngredients ?? []) {
-        this.ingredientService
-          .deleteIngredient(ingredient.id)
-          .subscribe({ error: (error) => console.log(error) });
+        this.ingredientService.deleteIngredient(ingredient.id).subscribe(
+          () => {
+            recipe.removedIngredients = recipe.removedIngredients.filter(
+              (i) => i.id !== ingredient.id,
+            );
+          },
+          (error) => console.log(error),
+        );
       }
     } else {
       this.recipeService.addRecipe(recipe).subscribe(
@@ -127,6 +132,10 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     for (let dto of recipe.addedIngredients ?? []) {
       this.ingredientService.addIngredient(dto).subscribe(
         (newIngredient) => {
+          recipe.addedIngredients = recipe.addedIngredients.filter(
+            (i) => i.prototypeId !== dto.prototypeId,
+          );
+
           // Replace dummy ingredient with real value
           recipe.ingredients = recipe.ingredients.map((ingredient) => {
             if (ingredient.prototype.id === dto.prototypeId)
