@@ -15,7 +15,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
 -->
 <ng-container>
   <div *ngIf="!editing" class="row">
-    <div class="col" style="min-height:200px;">
+    <div class="col" style="min-height: 200px;">
       <div class="horizontal-item-container item-container-all-start">
         <h1>{{ recipe.name }}</h1>
         <button type="button" (click)="startEditing()" class="btn btn-sm">
@@ -39,11 +39,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       />
     </div>
   </div>
-  <form
-    (ngSubmit)="onSubmit()"
-    #recipeForm="ngForm"
-    *ngIf="editing"
-  >
+  <form (ngSubmit)="onSubmit()" #recipeForm="ngForm" *ngIf="editing">
     <div class="form-group">
       <label for="editName">Name</label>
       <input
@@ -96,9 +92,28 @@ Copyright 2020 Felix Burk, Tim Niederhausen
   <ng-container>
     <h3>Ingredients</h3>
     <div *ngFor="let ingredient of this.recipe.ingredients">
-      <div class="horizontal-item-container">
+      <div *ngIf="!editing" class="horizontal-item-container">
         <div class="item-container-left">
           <div class="p-2">{{ ingredient.quantity }} {{ ingredient.unit }}</div>
+          <div class="p-2">
+            {{ ingredient.prototype.name }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="editing" class="horizontal-item-container">
+        <div class="item-container-left">
+          <input
+            type="text"
+            class="form-control p-2"
+            placeholder="quantity"
+            [(ngModel)]="ingredient.quantity"
+          />
+          <input
+            type="text"
+            class="form-control p-2"
+            placeholder="unit"
+            [(ngModel)]="ingredient.unit"
+          />
           <div class="p-2">
             {{ ingredient.prototype.name }}
           </div>
@@ -125,7 +140,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     </div>
     <div
       *ngIf="editing && addingNewIngredients"
-      class="horizontal-item-container p-2"
+      class="horizontal-item-container"
     >
       <input
         id="typeahead-focus"
