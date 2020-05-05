@@ -37,21 +37,27 @@ export class PageableEntityService<T, Q> {
   private _all: Page<T> = {};
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
+  private _entities$ = new Subject<Page<T>>();
 
   state: State<Q, T> = {};
-  entities$: Observable<Page<T>>;
 
   constructor(
     search: (state: State<Q, T>) => Observable<Page<T>>,
     debounceTimeVal = 200,
   ) {
-    this.entities$ = this._search$.pipe(
-      tap(() => this._loading$.next(true)),
-      debounceTime(debounceTimeVal),
-      switchMap(() => search(this.state)),
-      map((result) => this._mergeResult(result)),
-      tap(() => this._loading$.next(false)),
-    );
+    this._search$
+      .pipe(
+        tap(() => this._loading$.next(true)),
+        debounceTime(debounceTimeVal),
+        switchMap(() => search(this.state)),
+        map((result) => this._mergeResult(result)),
+        tap(() => this._loading$.next(false)),
+      )
+      .subscribe((result) => this._entities$.next(result));
+  }
+
+  get entities$() {
+    return this._entities$.asObservable();
   }
 
   get loading$() {
@@ -66,6 +72,11 @@ export class PageableEntityService<T, Q> {
     if (!this.state.pageable || this._all.last) return;
     this.state.pageable.page += 1;
     this.reload();
+  }
+
+  filter(callbackfn: (value: T, index: number, array: T[]) => unknown) {
+    this._all.content = this._all.content.filter(callbackfn);
+    this._entities$.next(this._all);
   }
 
   private _mergeResult(result: Page<T>) {
