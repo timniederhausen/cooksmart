@@ -39,7 +39,7 @@ export class PageableEntityService<T, Q> {
   private _search$ = new Subject<void>();
   private _entities$ = new Subject<Page<T>>();
 
-  state: State<Q, T> = {};
+  state: State<Q, T> = { pageable: { page: 0, size: 5, sort: [] } };
 
   constructor(
     search: (state: State<Q, T>) => Observable<Page<T>>,
@@ -74,7 +74,7 @@ export class PageableEntityService<T, Q> {
     this.reload();
   }
 
-  sort(sorter: (a,b) => number) {
+  sort(sorter: (a, b) => number) {
     this._all.content = this._all.content.sort(sorter);
     this._entities$.next(this._all);
   }
@@ -102,7 +102,7 @@ export class PageableEntityService<T, Q> {
         content: [...this._all.content, ...result.content],
       };
     }
-    this.state.pageable = this._all.pageable;
+    this.state.pageable = { ...this._all.pageable };
     return this._all;
   }
 }

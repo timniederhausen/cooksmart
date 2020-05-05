@@ -38,7 +38,7 @@ fun <T> of(page: Page<T>): SimplePage<T> {
             totalPages = page.totalPages,
             first = page.isFirst,
             last = page.isLast,
-            size = page.size,
+            size = page.numberOfElements,
             totalElements = page.totalElements,
             pageable = SimplePageable(
                     page = page.number,
