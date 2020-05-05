@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ import { PageableEntityService } from '../../core/pageable-entity.service';
   templateUrl: './ingredient-screen.component.html',
   styleUrls: ['./ingredient-screen.component.scss'],
 })
-export class IngredientScreenComponent implements OnInit {
+export class IngredientScreenComponent implements OnInit, AfterViewInit {
   ingredientPageService: PageableEntityService<IngredientPrototype, string>;
   ingredientsList$: Observable<IngredientPrototype[]>;
 

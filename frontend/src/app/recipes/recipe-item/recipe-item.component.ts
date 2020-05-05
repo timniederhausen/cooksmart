@@ -11,34 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import {
-  Ingredient,
-  IngredientDto,
-  IngredientProtoService,
-  IngredientPrototype,
-  IngredientService,
-  Recipe,
-  RecipeService,
-} from '../../data';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { merge, Observable, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   map,
   switchMap,
 } from 'rxjs/operators';
+import { NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
+
 import {
-  NgbTypeahead,
-  NgbTypeaheadSelectItemEvent,
-} from '@ng-bootstrap/ng-bootstrap';
+  Ingredient,
+  IngredientDto,
+  IngredientProtoService,
+  IngredientPrototype,
+  Recipe,
+} from '../../data';
 import { environment } from '../../../environments/environment';
 
 export interface StatefulRecipe extends Recipe {
@@ -59,15 +48,13 @@ export class RecipeItemComponent implements OnInit {
   editing: boolean = false;
   addingNewIngredients: boolean = false;
 
-  @ViewChild('instance', { static: true }) instance: NgbTypeahead;
-
   @Output()
   cancelEdit = new EventEmitter();
 
   @Output()
   save = new EventEmitter<Recipe>();
 
-  refresh$ = new BehaviorSubject<void>(undefined);
+  ingredientSearchTerm$ = new Subject<string>();
 
   env = environment;
 
@@ -115,10 +102,10 @@ export class RecipeItemComponent implements OnInit {
   ingredientSearchFormatter = (result: IngredientPrototype) => result.name;
 
   ingredientSearch = (text$: Observable<string>) => {
-    return combineLatest([text$, this.refresh$]).pipe(
+    return merge(text$, this.ingredientSearchTerm$).pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(([term]) =>
+      switchMap((term) =>
         this.ingredientProtoService
           .listIngredients(term)
           .pipe(map((p) => p.content.filter(this.isNewIngredient))),
