@@ -31,8 +31,16 @@ Copyright 2020 Felix Burk, Tim Niederhausen
     <div class="form-inline justify-content-between pb-2">
       <button class="btn btn-primary" (click)="addNew()">Add new</button>
       <div class="form-group">
-        <label for="sortBy" class="pr-2">Sort by:</label>
-        <select class="form-control" id="sortBy"> </select>
+        <select
+          #select
+          (change)="changeOrder(+select.value)"
+          class="custom-select"
+          id="sortBy"
+        >
+          <option [value]="0">Sort By</option>
+          <option [value]="1">Name (ascending)</option>
+          <option [value]="2">Name (descending)</option>
+        </select>
       </div>
     </div>
     <app-smart-list #ingredientList [items]="ingredientsList$">

@@ -74,6 +74,11 @@ export class PageableEntityService<T, Q> {
     this.reload();
   }
 
+  sort(sorter: (a,b) => number) {
+    this._all.content = this._all.content.sort(sorter);
+    this._entities$.next(this._all);
+  }
+
   filter(callbackfn: (value: T, index: number, array: T[]) => unknown) {
     this._all.content = this._all.content.filter(callbackfn);
     this._entities$.next(this._all);

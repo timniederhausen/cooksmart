@@ -13,7 +13,7 @@
 // limitations under the License.
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 import { IngredientProtoService, IngredientPrototype } from '../../data';
 import { PageableEntityService } from '../../core/pageable-entity.service';
@@ -105,5 +105,20 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
         console.log(error);
       },
     );
+  }
+
+  nameAsc = (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0);
+  nameDesc = (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? 1 : b.name.toLowerCase() < a.name.toLowerCase() ? -1 : 0);
+  changeOrder(select: number) {
+    let sorting = undefined;
+    switch (select) {
+      case 1:
+        sorting = this.nameAsc;
+        break;
+      case 2:
+        sorting = this.nameDesc;
+        break;
+    }
+    this.ingredientPageService.sort(sorting);
   }
 }
