@@ -101,7 +101,6 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   }
 
   saveRecipe(recipe: StatefulRecipe) {
-    console.log(recipe);
     if (recipe.id) {
       this.recipeService.updateRecipe(recipe.id, recipe).subscribe(
         () => {},
@@ -138,5 +137,11 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         (error) => console.log(error),
       );
     }
+  }
+
+  deleteRecipe(recipe: Recipe) {
+    this.recipeService.deleteRecipe(recipe.id).subscribe(() => {
+      this.recipePageService.filter((r) => r.id !== recipe.id);
+    });
   }
 }
