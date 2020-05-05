@@ -16,6 +16,7 @@ package org.planqk.cooksmart.api
 import org.planqk.cooksmart.model.Ingredient
 import org.planqk.cooksmart.model.IngredientPrototype
 import org.planqk.cooksmart.model.Recipe
+import org.planqk.cooksmart.repository.IngredientPrototypeRepository
 import org.planqk.cooksmart.repository.IngredientRepository
 import org.planqk.cooksmart.repository.RecipeRepository
 import org.planqk.cooksmart.util.SimplePage
@@ -33,7 +34,8 @@ import javax.transaction.Transactional
 @Validated
 @RequestMapping("\${api.base-path:}/recipe/v1")
 class RecipeController(private val recipeRepository: RecipeRepository,
-                       private val ingredientRepository: IngredientRepository) : RecipeApi {
+                       private val ingredientRepository: IngredientRepository,
+                       private val ingredientPrototypeRepository: IngredientPrototypeRepository) : RecipeApi {
     override fun deleteRecipe(id: Long): ResponseEntity<Unit> {
         recipeRepository.deleteById(id)
         return ResponseEntity(HttpStatus.OK)
@@ -62,7 +64,7 @@ class RecipeController(private val recipeRepository: RecipeRepository,
             val ingredientEntity = recipeEntity.ingredients.find { i -> i.id == ingredient.id }
             if (ingredientEntity == null) {
                 recipeEntity.ingredients.add(ingredientRepository.save(Ingredient(
-                        prototype = IngredientPrototype(id = ingredient.prototype.id),
+                        prototype = ingredientPrototypeRepository.getOne(ingredient.prototype.id),
                         recipe = recipeEntity,
                         quantity = ingredient.quantity,
                         unit = ingredient.unit
@@ -71,7 +73,7 @@ class RecipeController(private val recipeRepository: RecipeRepository,
             }
             ingredientEntity.quantity = ingredient.quantity
             ingredientEntity.unit = ingredient.unit
-            ingredientEntity.prototype = IngredientPrototype(id = ingredient.prototype.id)
+            ingredientEntity.prototype = ingredientPrototypeRepository.getOne(ingredient.prototype.id)
         }
 
         return ResponseEntity(recipeRepository.save(recipeEntity), HttpStatus.OK)
