@@ -59,10 +59,12 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
       )
       .subscribe((term) => {
         console.log('SEARCH ' + term);
+        this.recipePageService.state.pageable.page = 0;
         this.recipePageService.state.query = term;
         this.recipePageService.reload();
       });
     this.sort$.subscribe((sort) => {
+      this.recipePageService.state.pageable.page = 0;
       this.recipePageService.state.pageable.sort = [sort];
       this.recipePageService.reload();
     });
