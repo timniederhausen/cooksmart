@@ -153,4 +153,26 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
       this.recipePageService.filter((r) => r.id !== recipe.id);
     });
   }
+
+  nameAsc = (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0);
+  nameDesc = (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? 1 : b.name.toLowerCase() < a.name.toLowerCase() ? -1 : 0);
+  ratingAsc = (a, b) => (a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0);
+  ratingDes = (a, b) => (a.rating > b.rating ? 1 : b.rating > a.rating ? -1 : 0);
+  changeOrder(select: number) {
+    let sorting = undefined;
+    switch (select) {
+      case 1:
+        sorting = this.nameAsc;
+        break;
+      case 2:
+        sorting = this.nameDesc;
+        break;
+      case 3:
+        sorting = this.ratingAsc;
+        break;
+      case 4:
+        sorting = this.ratingDes;
+    }
+    this.recipePageService.sort(sorting);
+  }
 }
