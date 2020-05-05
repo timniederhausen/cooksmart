@@ -21,21 +21,21 @@ import javax.validation.constraints.NotNull
 data class Ingredient(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         @JsonProperty
-        val id: Long = 0,
+        var id: Long = 0,
 
         @ManyToOne(fetch = FetchType.LAZY)
-        val prototype: IngredientPrototype,
+        var prototype: IngredientPrototype,
 
         @JsonProperty
         @get: NotNull
-        val quantity: Int = 0,
+        var quantity: Int = 0,
 
         @JsonProperty
-        val unit: String = "",
+        var unit: String = "",
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-        val recipe: Recipe? = null
+        var recipe: Recipe? = null
 )
 
 data class IngredientDto(

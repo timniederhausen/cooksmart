@@ -30,11 +30,6 @@ import {
 } from '../../data';
 import { environment } from '../../../environments/environment';
 
-export interface StatefulRecipe extends Recipe {
-  removedIngredients?: Ingredient[];
-  addedIngredients?: IngredientDto[];
-}
-
 @Component({
   selector: 'app-recipe-item',
   templateUrl: './recipe-item.component.html',
@@ -42,7 +37,7 @@ export interface StatefulRecipe extends Recipe {
 })
 export class RecipeItemComponent implements OnInit {
   @Input()
-  recipe: StatefulRecipe = undefined;
+  recipe: Recipe = undefined;
 
   @Input()
   editing: boolean = false;
@@ -83,14 +78,6 @@ export class RecipeItemComponent implements OnInit {
   }
 
   deleteIngredient(ingredient: Ingredient) {
-    if (!this.recipe.removedIngredients) this.recipe.removedIngredients = [];
-
-    if (ingredient.id) this.recipe.removedIngredients.push(ingredient);
-    else
-      this.recipe.addedIngredients = this.recipe.addedIngredients.filter(
-        (r) => r.prototypeId !== ingredient.prototype.id,
-      );
-
     this.recipe.ingredients = this.recipe.ingredients.filter(
       (r) => r.prototype.id !== ingredient.prototype.id,
     );
@@ -117,17 +104,6 @@ export class RecipeItemComponent implements OnInit {
     this.addingNewIngredients = !this.addingNewIngredients;
     const newIngredientProto: IngredientPrototype = $event.item;
 
-    // Flushed to DB on save
-    if (!this.recipe.addedIngredients) this.recipe.addedIngredients = [];
-    this.recipe.addedIngredients.push({
-      prototypeId: newIngredientProto.id,
-      recipeId: this.recipe.id,
-      id: undefined,
-      quantity: 0,
-      unit: '',
-    });
-
-    // This is only for immediate viewing
     this.recipe.ingredients.push({
       prototype: newIngredientProto,
       id: undefined,

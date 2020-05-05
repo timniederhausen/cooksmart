@@ -13,7 +13,10 @@
 // limitations under the License.
 package org.planqk.cooksmart.api
 
+import org.planqk.cooksmart.model.Ingredient
+import org.planqk.cooksmart.model.IngredientPrototype
 import org.planqk.cooksmart.model.Recipe
+import org.planqk.cooksmart.repository.IngredientRepository
 import org.planqk.cooksmart.repository.RecipeRepository
 import org.planqk.cooksmart.util.SimplePage
 import org.planqk.cooksmart.util.of
@@ -24,11 +27,13 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.transaction.Transactional
 
 @RestController
 @Validated
 @RequestMapping("\${api.base-path:}/recipe/v1")
-class RecipeController(private val recipeRepository: RecipeRepository) : RecipeApi {
+class RecipeController(private val recipeRepository: RecipeRepository,
+                       private val ingredientRepository: IngredientRepository) : RecipeApi {
     override fun deleteRecipe(id: Long): ResponseEntity<Unit> {
         recipeRepository.deleteById(id)
         return ResponseEntity(HttpStatus.OK)
@@ -41,9 +46,35 @@ class RecipeController(private val recipeRepository: RecipeRepository) : RecipeA
         return ResponseEntity(instance, HttpStatus.OK)
     }
 
-    override fun updateRecipe(id: Long, recipe: Recipe): ResponseEntity<Unit> {
-        recipeRepository.save(recipe.copy(id = id))
-        return ResponseEntity(HttpStatus.OK)
+    @Transactional
+    override fun updateRecipe(id: Long, recipe: Recipe): ResponseEntity<Recipe> {
+        val recipeEntity = recipeRepository.getOne(id)
+
+        recipeEntity.name = recipe.name
+        recipeEntity.description = recipe.description
+
+        // Remove deleted ingredients
+        recipeEntity.ingredients.removeIf { ingredient ->
+            recipe.ingredients.find { i -> i.id == ingredient.id } == null
+        }
+
+        for (ingredient in recipe.ingredients) {
+            val ingredientEntity = recipeEntity.ingredients.find { i -> i.id == ingredient.id }
+            if (ingredientEntity == null) {
+                recipeEntity.ingredients.add(ingredientRepository.save(Ingredient(
+                        prototype = IngredientPrototype(id = ingredient.prototype.id),
+                        recipe = recipeEntity,
+                        quantity = ingredient.quantity,
+                        unit = ingredient.unit
+                )))
+                continue
+            }
+            ingredientEntity.quantity = ingredient.quantity
+            ingredientEntity.unit = ingredient.unit
+            ingredientEntity.prototype = IngredientPrototype(id = ingredient.prototype.id)
+        }
+
+        return ResponseEntity(recipeRepository.save(recipeEntity), HttpStatus.OK)
     }
 
     override fun listRecipes(query: String?,
@@ -55,7 +86,10 @@ class RecipeController(private val recipeRepository: RecipeRepository) : RecipeA
         return ResponseEntity(of(recipes), HttpStatus.OK)
     }
 
+    @Transactional
     override fun addRecipe(recipe: Recipe): ResponseEntity<Recipe> {
-        return ResponseEntity(recipeRepository.save(recipe.copy(id = 0)), HttpStatus.CREATED)
+        recipe.id = 0
+        recipe.ingredients = recipe.ingredients.map { ingredient -> ingredientRepository.save(ingredient) }.toMutableList()
+        return ResponseEntity(recipeRepository.save(recipe), HttpStatus.CREATED)
     }
 }

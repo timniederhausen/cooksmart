@@ -23,32 +23,26 @@ import javax.validation.constraints.NotNull
         NamedEntityGraph(name = "RecipeRecursive",
                 attributeNodes = [NamedAttributeNode(value = "ingredients", subgraph = "IngredientWithProto")],
                 subgraphs = [
-                        NamedSubgraph(
-                                name = "IngredientWithProto",
-                                attributeNodes = [NamedAttributeNode("prototype")]
-                        )
+                    NamedSubgraph(
+                            name = "IngredientWithProto",
+                            attributeNodes = [NamedAttributeNode("prototype")]
+                    )
                 ]
         )
 )
 data class Recipe(
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @JsonProperty
-        val id: Long = 0,
+        var id: Long = 0,
 
-        @JsonProperty
         @get: NotBlank
-        val name: String = "",
+        var name: String = "",
 
-        @JsonProperty
-        val description: String = "",
+        var description: String = "",
+        var image: String = "",
 
-        @JsonProperty
-        val image: String = "",
-
-        @JsonProperty
         @get: NotNull
-        val rating: Int = -1,
+        var rating: Int = -1,
 
-        @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "recipe")
-        val ingredients: List<Ingredient> = emptyList()
+        @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL], mappedBy = "recipe")
+        var ingredients: MutableList<Ingredient> = mutableListOf()
 )

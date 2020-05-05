@@ -15,14 +15,8 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 
-import {
-  SimplePageRecipe,
-  Recipe,
-  RecipeService,
-  IngredientService,
-} from '../../data';
+import { SimplePageRecipe, Recipe, RecipeService } from '../../data';
 import { PageableEntityService } from '../../core/pageable-entity.service';
-import { StatefulRecipe } from '../recipe-item/recipe-item.component';
 
 @Component({
   selector: 'app-recipe-screen',
@@ -32,17 +26,14 @@ import { StatefulRecipe } from '../recipe-item/recipe-item.component';
 export class RecipeScreenComponent implements OnInit, AfterViewInit {
   recipePageService: PageableEntityService<Recipe, string>;
 
-  recipesList$: Observable<StatefulRecipe[]>;
+  recipesList$: Observable<Recipe[]>;
 
   private searchTerms$ = new Subject<string>();
   private sort$ = new Subject<string>();
 
-  newRecipe?: StatefulRecipe;
+  newRecipe?: Recipe;
 
-  constructor(
-    private readonly recipeService: RecipeService,
-    private readonly ingredientService: IngredientService,
-  ) {
+  constructor(private readonly recipeService: RecipeService) {
     this.recipePageService = new PageableEntityService<Recipe, string>(
       (state) => {
         console.log(state);
@@ -79,9 +70,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         return of({ first: true, content: [] } as SimplePageRecipe);
       }),
     );
-    this.recipesList$ = recipePage$.pipe(
-      map((pr) => (pr.content as Array<StatefulRecipe>) ?? []),
-    );
+    this.recipesList$ = recipePage$.pipe(map((pr) => pr.content ?? []));
   }
 
   ngAfterViewInit() {
@@ -107,50 +96,27 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     };
   }
 
-  saveRecipe(recipe: StatefulRecipe) {
+  saveRecipe(recipe: Recipe) {
     if (recipe.id) {
       this.recipeService.updateRecipe(recipe.id, recipe).subscribe(
-        () => {},
+        (updatedRecipe) => {
+          // The server is the only source of truth here
+          Object.assign(recipe, updatedRecipe);
+        },
         (error) => {
           console.log(error);
         },
       );
-      for (let ingredient of recipe.removedIngredients ?? []) {
-        this.ingredientService.deleteIngredient(ingredient.id).subscribe(
-          () => {
-            recipe.removedIngredients = recipe.removedIngredients.filter(
-              (i) => i.id !== ingredient.id,
-            );
-          },
-          (error) => console.log(error),
-        );
-      }
     } else {
       this.recipeService.addRecipe(recipe).subscribe(
         (addedRecipe) => {
+          // XXX: How should an added recipe be handled if we have multiple pages loaded?
           this.recipePageService.reload();
           this.newRecipe = undefined;
         },
         (error) => {
           console.log(error);
         },
-      );
-    }
-    for (let dto of recipe.addedIngredients ?? []) {
-      this.ingredientService.addIngredient(dto).subscribe(
-        (newIngredient) => {
-          recipe.addedIngredients = recipe.addedIngredients.filter(
-            (i) => i.prototypeId !== dto.prototypeId,
-          );
-
-          // Replace dummy ingredient with real value
-          recipe.ingredients = recipe.ingredients.map((ingredient) => {
-            if (ingredient.prototype.id === dto.prototypeId)
-              return newIngredient;
-            return ingredient;
-          });
-        },
-        (error) => console.log(error),
       );
     }
   }

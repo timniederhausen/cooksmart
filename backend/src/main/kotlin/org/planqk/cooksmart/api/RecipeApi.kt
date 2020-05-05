@@ -57,7 +57,7 @@ interface RecipeApi {
     fun updateRecipe(@Parameter(description = "ID of the recipe to update", required = true)
                      @PathVariable("id") id: Long,
                      @Parameter(description = "New recipe data", required = true)
-                     @RequestBody recipe: @Valid Recipe): ResponseEntity<Unit>
+                     @RequestBody recipe: @Valid Recipe): ResponseEntity<Recipe>
 
     @Operation(summary = "Get a list of all recipes")
     @ApiResponses(value = [
