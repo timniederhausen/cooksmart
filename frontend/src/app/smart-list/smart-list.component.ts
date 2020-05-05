@@ -43,6 +43,9 @@ export class SmartListComponent<T> implements OnInit {
   @Input()
   canLoadMore$ = of(true);
 
+  @Output()
+  loadMore = new EventEmitter();
+
   currentItems: Panel<T>[] = [];
 
   @ContentChild(HeaderDirective, { read: TemplateRef, static: true })
@@ -51,13 +54,13 @@ export class SmartListComponent<T> implements OnInit {
   @ContentChild(ContentDirective, { read: TemplateRef, static: true })
   contentTemplate: TemplateRef<any>;
 
-  @Output()
-  loadMore = new EventEmitter();
+  private currentlyOpenItem = -1;
 
   constructor() {}
 
   ngOnInit() {
     this.items.subscribe((items) => {
+      this.currentlyOpenItem = -1;
       this.currentItems = items.map((item, index) => {
         const newItem = item as Panel<T>;
         newItem.index = index;
@@ -68,6 +71,10 @@ export class SmartListComponent<T> implements OnInit {
   }
 
   toggle(index: number) {
+    if (this.currentlyOpenItem !== -1 && this.currentlyOpenItem !== index)
+      this.currentItems[this.currentlyOpenItem].isOpen = false;
+
+    this.currentlyOpenItem = index;
     this.currentItems[index].isOpen = !this.currentItems[index].isOpen;
   }
 }
