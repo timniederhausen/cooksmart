@@ -45,7 +45,12 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         </select>
       </div>
     </div>
-    <app-smart-list #recipeList [items]="recipesList$">
+    <app-smart-list
+      #recipeList
+      [items]="recipesList$"
+      [canLoadMore$]="canLoadMore$"
+      (loadMore)="loadMore()"
+    >
       <ng-container *header="let item">
         <div
           class="btn horizontal-item-container"

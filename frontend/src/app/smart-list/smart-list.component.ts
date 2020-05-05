@@ -41,7 +41,7 @@ export class SmartListComponent<T> implements OnInit {
   items: Observable<T[]> = of([]);
 
   @Input()
-  canLoadMore$ = of(true);
+  canLoadMore$ = of(false);
 
   @Output()
   loadMore = new EventEmitter();

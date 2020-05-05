@@ -27,6 +27,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   recipePageService: PageableEntityService<Recipe, string>;
 
   recipesList$: Observable<Recipe[]>;
+  canLoadMore$: Observable<boolean>;
 
   private searchTerms$ = new Subject<string>();
   private sort$ = new Subject<string>();
@@ -45,6 +46,9 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         );
       },
     );
+    this.canLoadMore$ = this.recipePageService.entities$.pipe(
+      map((p) => !p.last),
+    );
   }
 
   ngOnInit() {
@@ -58,9 +62,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         this.recipePageService.state.query = term;
         this.recipePageService.reload();
       });
-    this.sort$
-      .pipe().subscribe( (sort) => {
-      console.log('SORT' + sort);
+    this.sort$.subscribe((sort) => {
       this.recipePageService.state.pageable.sort = [sort];
       this.recipePageService.reload();
     });
