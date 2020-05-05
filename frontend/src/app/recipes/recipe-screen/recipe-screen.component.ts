@@ -35,6 +35,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
   recipesList$: Observable<StatefulRecipe[]>;
 
   private searchTerms$ = new Subject<string>();
+  private sort$ = new Subject<string>();
 
   newRecipe?: StatefulRecipe;
 
@@ -66,6 +67,12 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         this.recipePageService.state.query = term;
         this.recipePageService.reload();
       });
+    this.sort$
+      .pipe().subscribe( (sort) => {
+      console.log('SORT' + sort);
+      this.recipePageService.state.pageable.sort = [sort];
+      this.recipePageService.reload();
+    });
     const recipePage$ = this.recipePageService.entities$.pipe(
       catchError((err) => {
         console.log(err);
@@ -154,25 +161,7 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
     });
   }
 
-  nameAsc = (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0);
-  nameDesc = (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? 1 : b.name.toLowerCase() < a.name.toLowerCase() ? -1 : 0);
-  ratingAsc = (a, b) => (a.rating < b.rating ? 1 : b.rating < a.rating ? -1 : 0);
-  ratingDes = (a, b) => (a.rating > b.rating ? 1 : b.rating > a.rating ? -1 : 0);
-  changeOrder(select: number) {
-    let sorting = undefined;
-    switch (select) {
-      case 1:
-        sorting = this.nameAsc;
-        break;
-      case 2:
-        sorting = this.nameDesc;
-        break;
-      case 3:
-        sorting = this.ratingAsc;
-        break;
-      case 4:
-        sorting = this.ratingDes;
-    }
-    this.recipePageService.sort(sorting);
+  changeOrder(sort: string) {
+    this.sort$.next(sort);
   }
 }

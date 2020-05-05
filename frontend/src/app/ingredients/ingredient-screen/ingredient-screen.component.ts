@@ -28,6 +28,8 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
   ingredientsList$: Observable<IngredientPrototype[]>;
 
   private searchTerms$ = new Subject<string>();
+  private sort$ = new Subject<string>();
+
 
   newIngredient?: IngredientPrototype;
 
@@ -60,6 +62,12 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
     this.ingredientsList$ = this.ingredientPageService.entities$.pipe(
       map((pr) => pr.content ?? []),
     );
+    this.sort$
+      .pipe().subscribe( (sort) => {
+        console.log('SORT' + sort);
+        this.ingredientPageService.state.pageable.sort = [sort];
+        this.ingredientPageService.reload();
+    });
   }
 
   ngAfterViewInit() {
@@ -107,18 +115,7 @@ export class IngredientScreenComponent implements OnInit, AfterViewInit {
     );
   }
 
-  nameAsc = (a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : b.name.toLowerCase() > a.name.toLowerCase() ? -1 : 0);
-  nameDesc = (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? 1 : b.name.toLowerCase() < a.name.toLowerCase() ? -1 : 0);
-  changeOrder(select: number) {
-    let sorting = undefined;
-    switch (select) {
-      case 1:
-        sorting = this.nameAsc;
-        break;
-      case 2:
-        sorting = this.nameDesc;
-        break;
-    }
-    this.ingredientPageService.sort(sorting);
+  changeOrder(sort: string) {
+    this.sort$.next(sort);
   }
 }

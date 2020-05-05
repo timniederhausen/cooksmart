@@ -33,13 +33,13 @@ Copyright 2020 Felix Burk, Tim Niederhausen
       <div class="form-group">
         <select
           #select
-          (change)="changeOrder(+select.value)"
+          (change)="changeOrder(select.value)"
           class="custom-select"
           id="sortBy"
         >
-          <option [value]="0">Sort By</option>
-          <option [value]="1">Name (ascending)</option>
-          <option [value]="2">Name (descending)</option>
+          <option value="">Sort By</option>
+          <option value="name,asc">Name (ascending)</option>
+          <option value="name,desc">Name (descending)</option>
         </select>
       </div>
     </div>
