@@ -26,7 +26,7 @@ class CooksmartApplication {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry.addMapping("/**")
-                        .allowedMethods("GET", "POST", "PUT")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedOrigins("http://localhost:4200");
             }
         }
