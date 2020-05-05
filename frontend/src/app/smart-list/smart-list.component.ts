@@ -15,8 +15,10 @@ import {
   Component,
   ContentChild,
   Directive,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   TemplateRef,
 } from '@angular/core';
 import { Observable, of } from 'rxjs';
@@ -38,6 +40,9 @@ export class SmartListComponent<T> implements OnInit {
   @Input()
   items: Observable<T[]> = of([]);
 
+  @Input()
+  canLoadMore$ = of(true);
+
   currentItems: Panel<T>[] = [];
 
   @ContentChild(HeaderDirective, { read: TemplateRef, static: true })
@@ -45,6 +50,9 @@ export class SmartListComponent<T> implements OnInit {
 
   @ContentChild(ContentDirective, { read: TemplateRef, static: true })
   contentTemplate: TemplateRef<any>;
+
+  @Output()
+  loadMore = new EventEmitter();
 
   constructor() {}
 

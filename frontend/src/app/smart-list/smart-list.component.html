@@ -13,26 +13,35 @@ Copyright 2020 Felix Burk, Tim Niederhausen
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<ng-template ngFor let-item let-i="index" [ngForOf]="currentItems">
-  <div class="card mb-1">
-    <div role="tab" id="panel-{{ i }}-header" class="card-header">
-      <ng-template
-        [ngTemplateOutlet]="headerTemplate"
-        [ngTemplateOutletContext]="{ $implicit: item }"
-      ></ng-template>
-    </div>
-    <div
-      id="panel-{{ i }}"
-      role="tabpanel"
-      class="collapse"
-      [class.show]="item.isOpen"
-    >
-      <div class="card-body">
+<div [class.load-more-container]="canLoadMore$ | async">
+  <ng-template ngFor let-item let-i="index" [ngForOf]="currentItems">
+    <div class="card mb-1">
+      <div role="tab" id="panel-{{ i }}-header" class="card-header">
         <ng-template
-          [ngTemplateOutlet]="contentTemplate"
+          [ngTemplateOutlet]="headerTemplate"
           [ngTemplateOutletContext]="{ $implicit: item }"
         ></ng-template>
       </div>
+      <div
+        id="panel-{{ i }}"
+        role="tabpanel"
+        class="collapse"
+        [class.show]="item.isOpen"
+      >
+        <div class="card-body">
+          <ng-template
+            [ngTemplateOutlet]="contentTemplate"
+            [ngTemplateOutletContext]="{ $implicit: item }"
+          ></ng-template>
+        </div>
+      </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
+</div>
+<div
+  class="d-flex load-more-controls justify-content-center align-items-end"
+  *ngIf="canLoadMore$ | async"
+  (click)="loadMore.emit()"
+>
+  <span>Load more</span>
+</div>
