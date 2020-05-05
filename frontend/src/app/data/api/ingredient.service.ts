@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { Ingredient } from '../model/models';
+import { IngredientDto } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -86,17 +87,17 @@ export class IngredientService {
     }
 
     /**
-     * Add a new ingredient prototype
-     * @param ingredient Ingredient prototype to add
+     * Add a new ingredient
+     * @param ingredientDto Ingredient to add
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public addIngredient(ingredient: Ingredient, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*'}): Observable<Ingredient>;
-    public addIngredient(ingredient: Ingredient, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*'}): Observable<HttpResponse<Ingredient>>;
-    public addIngredient(ingredient: Ingredient, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*'}): Observable<HttpEvent<Ingredient>>;
-    public addIngredient(ingredient: Ingredient, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*'}): Observable<any> {
-        if (ingredient === null || ingredient === undefined) {
-            throw new Error('Required parameter ingredient was null or undefined when calling addIngredient.');
+    public addIngredient(ingredientDto: IngredientDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*'}): Observable<Ingredient>;
+    public addIngredient(ingredientDto: IngredientDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*'}): Observable<HttpResponse<Ingredient>>;
+    public addIngredient(ingredientDto: IngredientDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*'}): Observable<HttpEvent<Ingredient>>;
+    public addIngredient(ingredientDto: IngredientDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*'}): Observable<any> {
+        if (ingredientDto === null || ingredientDto === undefined) {
+            throw new Error('Required parameter ingredientDto was null or undefined when calling addIngredient.');
         }
 
         let headers = this.defaultHeaders;
@@ -129,7 +130,7 @@ export class IngredientService {
         }
 
         return this.httpClient.post<Ingredient>(`${this.configuration.basePath}/api/ingredient/v1/`,
-            ingredient,
+            ingredientDto,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

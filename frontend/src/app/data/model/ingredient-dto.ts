@@ -9,14 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Ingredient } from './ingredient';
 
 
-export interface IngredientPrototype { 
+export interface IngredientDto { 
     id: number;
-    name: string;
-    description: string;
-    image: string;
-    ingredients?: Array<Ingredient>;
+    prototypeId: number;
+    quantity: number;
+    unit: string;
+    recipeId: number;
 }
 

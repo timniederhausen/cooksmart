@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.planqk.cooksmart.model.Ingredient
+import org.planqk.cooksmart.model.IngredientDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -46,13 +47,13 @@ interface IngredientApi {
                          @Parameter(description = "New ingredient data", required = true)
                          @RequestBody ingredient: @Valid Ingredient): ResponseEntity<Unit>
 
-    @Operation(summary = "Add a new ingredient prototype")
+    @Operation(summary = "Add a new ingredient")
     @ApiResponses(value = [
         ApiResponse(responseCode = "201", description = "Add succeeded"),
         ApiResponse(responseCode = "400", description = "Invalid ingredient data supplied",
                 content = [Content()])
     ])
     @PostMapping(value = ["/"], consumes = ["application/json"])
-    fun addIngredient(@Parameter(description = "Ingredient prototype to add", required = true)
-                      @RequestBody ingredient: @Valid Ingredient): ResponseEntity<Ingredient>
+    fun addIngredient(@Parameter(description = "Ingredient to add", required = true)
+                      @RequestBody ingredient: @Valid IngredientDto): ResponseEntity<Ingredient>
 }

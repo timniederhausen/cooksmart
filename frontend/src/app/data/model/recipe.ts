@@ -18,6 +18,6 @@ export interface Recipe {
     description: string;
     image: string;
     rating: number;
-    ingredients: Array<Ingredient>;
+    ingredients?: Array<Ingredient>;
 }
 

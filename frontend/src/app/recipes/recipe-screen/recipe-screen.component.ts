@@ -15,7 +15,12 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 
-import { SimplePageRecipe, Recipe, RecipeService } from '../../data';
+import {
+  SimplePageRecipe,
+  Recipe,
+  RecipeService,
+  IngredientService,
+} from '../../data';
 import { PageableEntityService } from '../../core/pageable-entity.service';
 import { StatefulRecipe } from '../recipe-item/recipe-item.component';
 
@@ -33,7 +38,10 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
 
   newRecipe?: StatefulRecipe;
 
-  constructor(private readonly recipeService: RecipeService) {
+  constructor(
+    private readonly recipeService: RecipeService,
+    private readonly ingredientService: IngredientService,
+  ) {
     this.recipePageService = new PageableEntityService<Recipe, string>(
       (state) => {
         console.log(state);
@@ -102,18 +110,33 @@ export class RecipeScreenComponent implements OnInit, AfterViewInit {
         },
       );
       for (let ingredient of recipe.removedIngredients ?? []) {
-        //
+        this.ingredientService
+          .deleteIngredient(ingredient.id)
+          .subscribe({ error: (error) => console.log(error) });
       }
-      return;
+    } else {
+      this.recipeService.addRecipe(recipe).subscribe(
+        (addedRecipe) => {
+          this.recipePageService.reload();
+          this.newRecipe = undefined;
+        },
+        (error) => {
+          console.log(error);
+        },
+      );
     }
-    this.recipeService.addRecipe(recipe).subscribe(
-      (addedRecipe) => {
-        this.recipePageService.reload();
-        this.newRecipe = undefined;
-      },
-      (error) => {
-        console.log(error);
-      },
-    );
+    for (let dto of recipe.addedIngredients ?? []) {
+      this.ingredientService.addIngredient(dto).subscribe(
+        (newIngredient) => {
+          // Replace dummy ingredient with real value
+          recipe.ingredients = recipe.ingredients.map((ingredient) => {
+            if (ingredient.prototype.id === dto.prototypeId)
+              return newIngredient;
+            return ingredient;
+          });
+        },
+        (error) => console.log(error),
+      );
+    }
   }
 }

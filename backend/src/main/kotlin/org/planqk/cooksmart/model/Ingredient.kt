@@ -15,7 +15,6 @@ package org.planqk.cooksmart.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 @Entity
@@ -25,7 +24,6 @@ data class Ingredient(
         val id: Long = 0,
 
         @ManyToOne(fetch = FetchType.LAZY)
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val prototype: IngredientPrototype,
 
         @JsonProperty
@@ -38,4 +36,12 @@ data class Ingredient(
         @ManyToOne(fetch = FetchType.LAZY)
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val recipe: Recipe? = null
+)
+
+data class IngredientDto(
+        val id: Long = 0,
+        val prototypeId: Long = 0,
+        val quantity: Int = 0,
+        val unit: String = "",
+        val recipeId: Long = 0
 )

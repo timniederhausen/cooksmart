@@ -106,7 +106,7 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         <div *ngIf="editing" class="item-container-right">
           <button
             type="button"
-            (click)="deleteIngredient(ingredient.id)"
+            (click)="deleteIngredient(ingredient)"
             class="btn btn-sm"
           >
             <i class="material-icons">clear</i>
@@ -137,7 +137,6 @@ Copyright 2020 Felix Burk, Tim Niederhausen
         placeholder="Search for Ingredients"
         (selectItem)="selectedIngredient($event)"
         (focus)="this.refresh$.next()"
-        (click)="onFocus($event)"
         #instance="ngbTypeahead"
       />
       <button

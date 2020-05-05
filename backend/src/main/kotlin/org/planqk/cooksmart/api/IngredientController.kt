@@ -14,6 +14,9 @@
 package org.planqk.cooksmart.api
 
 import org.planqk.cooksmart.model.Ingredient
+import org.planqk.cooksmart.model.IngredientDto
+import org.planqk.cooksmart.model.IngredientPrototype
+import org.planqk.cooksmart.model.Recipe
 import org.planqk.cooksmart.repository.IngredientRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -36,7 +39,13 @@ class IngredientController(private val ingredientRepo: IngredientRepository) : I
         return ResponseEntity(HttpStatus.OK)
     }
 
-    override fun addIngredient(ingredient: Ingredient): ResponseEntity<Ingredient> {
-        return ResponseEntity(ingredientRepo.save(ingredient.copy(id = 0)), HttpStatus.CREATED)
+    override fun addIngredient(ingredient: IngredientDto): ResponseEntity<Ingredient> {
+        val dbIngredient = Ingredient(
+                prototype = IngredientPrototype(id = ingredient.prototypeId),
+                recipe = Recipe(id = ingredient.recipeId),
+                quantity = ingredient.quantity,
+                unit = ingredient.unit
+        )
+        return ResponseEntity(ingredientRepo.save(dbIngredient), HttpStatus.CREATED)
     }
 }

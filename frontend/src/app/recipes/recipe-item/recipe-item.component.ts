@@ -22,6 +22,7 @@ import {
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import {
   Ingredient,
+  IngredientDto,
   IngredientProtoService,
   IngredientPrototype,
   IngredientService,
@@ -42,6 +43,7 @@ import { environment } from '../../../environments/environment';
 
 export interface StatefulRecipe extends Recipe {
   removedIngredients?: Ingredient[];
+  addedIngredients?: IngredientDto[];
 }
 
 @Component({
@@ -51,7 +53,7 @@ export interface StatefulRecipe extends Recipe {
 })
 export class RecipeItemComponent implements OnInit {
   @Input()
-  recipe: Recipe = undefined;
+  recipe: StatefulRecipe = undefined;
 
   @Input()
   editing: boolean = false;
@@ -71,8 +73,6 @@ export class RecipeItemComponent implements OnInit {
 
   constructor(
     private readonly ingredientProtoService: IngredientProtoService,
-    private readonly ingredientService: IngredientService,
-    private readonly recipeService: RecipeService,
   ) {}
 
   ngOnInit() {}
@@ -95,14 +95,17 @@ export class RecipeItemComponent implements OnInit {
     this.save.emit(this.recipe);
   }
 
-  deleteIngredient(id: number) {
+  deleteIngredient(ingredient: Ingredient) {
+    if (!this.recipe.removedIngredients) this.recipe.removedIngredients = [];
+
+    if (ingredient.id) this.recipe.removedIngredients.push(ingredient);
+    else
+      this.recipe.addedIngredients = this.recipe.addedIngredients.filter(
+        (r) => r.prototypeId !== ingredient.prototype.id,
+      );
+
     this.recipe.ingredients = this.recipe.ingredients.filter(
-      (r) => r.id !== id,
-    );
-    this.recipeService.updateRecipe(this.recipe.id, this.recipe).subscribe(
-      (error) => {
-        console.log(error);
-      },
+      (r) => r.prototype.id !== ingredient.prototype.id,
     );
   }
 
@@ -126,27 +129,23 @@ export class RecipeItemComponent implements OnInit {
   selectedIngredient($event: NgbTypeaheadSelectItemEvent) {
     this.addingNewIngredients = !this.addingNewIngredients;
     const newIngredientProto: IngredientPrototype = $event.item;
-    const newIngredient = {
-      prototype: newIngredientProto,
-      id: 0,
+
+    // Flushed to DB on save
+    if (!this.recipe.addedIngredients) this.recipe.addedIngredients = [];
+    this.recipe.addedIngredients.push({
+      prototypeId: newIngredientProto.id,
+      recipeId: this.recipe.id,
+      id: undefined,
       quantity: 0,
       unit: '',
-    };
-    this.ingredientService.addIngredient(newIngredient).subscribe(
-      (addedIngredient) => {
-        this.recipe.ingredients.push(addedIngredient);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }
+    });
 
-  public onFocus(e: Event): void {
-    e.stopPropagation();
-    setTimeout(() => {
-      const inputEvent: Event = new Event('input');
-      e.target.dispatchEvent(inputEvent);
-    }, 0);
+    // This is only for immediate viewing
+    this.recipe.ingredients.push({
+      prototype: newIngredientProto,
+      id: undefined,
+      quantity: 0,
+      unit: '',
+    });
   }
 }
