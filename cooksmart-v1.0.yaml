@@ -1,10 +1,18 @@
 openapi: 3.0.1
 info:
-  title: OpenAPI definition
-  version: v0
+  title: Cooksmart
+  description: Recipe management platform, realised as a pre-project for our SWT EnPro
+  contact:
+    name: GitHub Repository
+    url: https://github.com/timniederhausen/cooksmart
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1.0"
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+- url: https://cooksmart.today
+  description: Live instance
+  variables: {}
 tags:
 - name: shopping-list
   description: Shopping list creation
@@ -15,6 +23,28 @@ tags:
 - name: ingredient
   description: Recipe-bound ingredients
 paths:
+  /api/ingredient/v1/:
+    post:
+      tags:
+      - ingredient
+      summary: Add a new ingredient
+      operationId: addIngredient
+      requestBody:
+        description: Ingredient to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientDto'
+        required: true
+      responses:
+        "201":
+          description: Add succeeded
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        "400":
+          description: Invalid ingredient data supplied
   /api/ingredient/v1/{id}:
     put:
       tags:
@@ -54,110 +84,6 @@ paths:
       - ingredient
       summary: Delete an ingredient
       operationId: deleteIngredient
-      parameters:
-      - name: id
-        in: path
-        description: Ingredient to delete
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: Delete succeeded
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Unit'
-        "400":
-          description: Invalid ingredient ID
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Unit'
-  /api/ingredient/v1/:
-    post:
-      tags:
-      - ingredient
-      summary: Add a new ingredient
-      operationId: addIngredient
-      requestBody:
-        description: Ingredient to add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/IngredientDto'
-        required: true
-      responses:
-        "201":
-          description: Add succeeded
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Ingredient'
-        "400":
-          description: Invalid ingredient data supplied
-  /api/ingredient-proto/v1/{id}:
-    get:
-      tags:
-      - ingredient-proto
-      summary: Retrieve an ingredient prototype
-      operationId: getIngredient
-      parameters:
-      - name: id
-        in: path
-        description: ID of the ingredient to retrieve
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "400":
-          description: Invalid ingredient ID
-        "200":
-          description: The ingredient data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IngredientPrototype'
-    put:
-      tags:
-      - ingredient-proto
-      summary: Update an ingredient prototype
-      operationId: updateIngredient_1
-      parameters:
-      - name: id
-        in: path
-        description: ID of the ingredient to update
-        required: true
-        schema:
-          type: integer
-          format: int64
-      requestBody:
-        description: New ingredient data
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/IngredientPrototype'
-        required: true
-      responses:
-        "200":
-          description: Update succeeded
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Unit'
-        "400":
-          description: Invalid ingredient data
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Unit'
-    delete:
-      tags:
-      - ingredient-proto
-      summary: Delete an ingredient
-      operationId: deleteIngredient_1
       parameters:
       - name: id
         in: path
@@ -242,6 +168,88 @@ paths:
                 $ref: '#/components/schemas/IngredientPrototype'
         "400":
           description: Invalid ingredient data supplied
+  /api/ingredient-proto/v1/{id}:
+    get:
+      tags:
+      - ingredient-proto
+      summary: Retrieve an ingredient prototype
+      operationId: getIngredient
+      parameters:
+      - name: id
+        in: path
+        description: ID of the ingredient to retrieve
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Invalid ingredient ID
+        "200":
+          description: The ingredient data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientPrototype'
+    put:
+      tags:
+      - ingredient-proto
+      summary: Update an ingredient prototype
+      operationId: updateIngredient_1
+      parameters:
+      - name: id
+        in: path
+        description: ID of the ingredient to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: New ingredient data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngredientPrototype'
+        required: true
+      responses:
+        "200":
+          description: Update succeeded
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Unit'
+        "400":
+          description: Invalid ingredient data
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Unit'
+    delete:
+      tags:
+      - ingredient-proto
+      summary: Delete an ingredient
+      operationId: deleteIngredient_1
+      parameters:
+      - name: id
+        in: path
+        description: Ingredient to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Delete succeeded
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Unit'
+        "400":
+          description: Invalid ingredient ID
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Unit'
   /api/recipe/v1/recipe/{id}:
     get:
       tags:
@@ -291,13 +299,13 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Unit'
+                $ref: '#/components/schemas/Recipe'
         "400":
           description: Invalid recipe data
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Unit'
+                $ref: '#/components/schemas/Recipe'
     delete:
       tags:
       - recipe
@@ -419,11 +427,33 @@ paths:
           description: Invalid recipe ID supplied
 components:
   schemas:
-    Unit:
+    IngredientDto:
+      required:
+      - id
+      - prototypeId
+      - quantity
+      - recipeId
+      - unit
       type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        prototypeId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        unit:
+          type: string
+        recipeId:
+          type: integer
+          format: int64
     Ingredient:
       required:
       - id
+      - prototype
       - quantity
       - unit
       type: object
@@ -457,15 +487,12 @@ components:
           type: string
         image:
           type: string
-        ingredients:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ingredient'
     Recipe:
       required:
       - description
       - id
       - image
+      - ingredients
       - name
       - rating
       type: object
@@ -486,29 +513,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Ingredient'
-    IngredientDto:
-      required:
-      - id
-      - prototypeId
-      - quantity
-      - recipeId
-      - unit
+    Unit:
       type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        prototypeId:
-          type: integer
-          format: int64
-        quantity:
-          type: integer
-          format: int32
-        unit:
-          type: string
-        recipeId:
-          type: integer
-          format: int64
     SimplePageIngredientPrototype:
       required:
       - content

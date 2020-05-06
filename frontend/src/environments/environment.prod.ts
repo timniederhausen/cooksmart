@@ -12,5 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 export const environment = {
-  production: true
+  production: true,
+  default_image:
+    'https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg',
 };
