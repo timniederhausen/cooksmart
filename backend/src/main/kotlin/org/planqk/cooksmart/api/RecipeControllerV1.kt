@@ -14,7 +14,6 @@
 package org.planqk.cooksmart.api
 
 import org.planqk.cooksmart.model.Ingredient
-import org.planqk.cooksmart.model.IngredientPrototype
 import org.planqk.cooksmart.model.Recipe
 import org.planqk.cooksmart.repository.IngredientPrototypeRepository
 import org.planqk.cooksmart.repository.IngredientRepository
@@ -23,6 +22,11 @@ import org.planqk.cooksmart.util.SimplePage
 import org.planqk.cooksmart.util.of
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.CollectionModel
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -32,10 +36,11 @@ import javax.transaction.Transactional
 
 @RestController
 @Validated
-@RequestMapping("\${api.base-path:}/recipe/v1")
-class RecipeController(private val recipeRepository: RecipeRepository,
-                       private val ingredientRepository: IngredientRepository,
-                       private val ingredientPrototypeRepository: IngredientPrototypeRepository) : RecipeApi {
+@RequestMapping("/api/recipe/v1")
+class RecipeControllerV1(private val recipeRepository: RecipeRepository,
+                         private val ingredientRepository: IngredientRepository,
+                         private val ingredientPrototypeRepository: IngredientPrototypeRepository,
+                         private val recipeModelAssembler: RecipeModelAssembler) : RecipeApiV1 {
     override fun deleteRecipe(id: Long): ResponseEntity<Unit> {
         recipeRepository.deleteById(id)
         return ResponseEntity(HttpStatus.OK)
@@ -93,5 +98,15 @@ class RecipeController(private val recipeRepository: RecipeRepository,
         recipe.id = 0
         recipe.ingredients = recipe.ingredients.map { ingredient -> ingredientRepository.save(ingredient) }.toMutableList()
         return ResponseEntity(recipeRepository.save(recipe), HttpStatus.CREATED)
+    }
+
+    override fun searchRecipes(query: String?, pageable: Pageable,
+                               assembler: PagedResourcesAssembler<Recipe>): ResponseEntity<CollectionModel<EntityModel<Recipe>>> {
+        val recipes = if (query == null || query.isEmpty())
+            recipeRepository.findAllDeep(pageable)
+        else
+            recipeRepository.findMatchingDeep(query, pageable)
+        val selfLink = linkTo(methodOn(RecipeControllerV1::class.java).searchRecipes(query, pageable, assembler)).withSelfRel()
+        return ResponseEntity.ok(assembler.toModel(recipes, recipeModelAssembler, selfLink))
     }
 }

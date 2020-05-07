@@ -23,12 +23,15 @@ import org.planqk.cooksmart.model.Recipe
 import org.planqk.cooksmart.util.SimplePage
 import org.springdoc.data.rest.converters.PageableAsQueryParam
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.CollectionModel
+import org.springframework.hateoas.EntityModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @Tag(name = "recipe", description = "Recipes")
-interface RecipeApi {
+interface RecipeApiV1 {
     @Operation(summary = "Delete an existing recipe")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Delete succeeded"),
@@ -80,4 +83,21 @@ interface RecipeApi {
     ])
     @PostMapping(value = ["/recipes"], produces = ["application/json"], consumes = ["application/json"])
     fun addRecipe(@RequestBody recipe: @Valid Recipe): ResponseEntity<Recipe>
+
+    // HATEOAS example
+    @Operation(summary = "Get a list of all recipes")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "List of all recipes"),
+        ApiResponse(responseCode = "204", description = "There are no recipes",
+                content = [Content()])
+    ])
+    @GetMapping(value = ["/search"], produces = ["application/json"])
+    @PageableAsQueryParam
+    fun searchRecipes(@Parameter(description = "Filter for the recipe name", required = false)
+                      @RequestParam("query")
+                      query: String?,
+                      @Parameter(hidden = true)
+                      pageable: Pageable,
+                      @Parameter(hidden = true)
+                      assembler: PagedResourcesAssembler<Recipe>): ResponseEntity<CollectionModel<EntityModel<Recipe>>>
 }
